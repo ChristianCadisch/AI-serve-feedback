@@ -336,6 +336,7 @@ extension GameViewController: CameraViewControllerOutputDelegate {
             trajectoryQueue.async {
                 do {
                     try visionHandler.perform([self.detectTrajectoryRequest])
+                    
                     if let results = self.detectTrajectoryRequest.results {
                         DispatchQueue.main.async {
                             self.processTrajectoryObservations(controller, results)

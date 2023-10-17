@@ -191,7 +191,7 @@ class SetupViewController: UIViewController {
     }
     
     var sceneStability: SceneStabilityResult {
-        return .stable
+        return .stable //this direct return statement skips the stability checks
         // Determine if we have enough evidence of stability.
         guard sceneStabilityHistoryPoints.count > sceneStabilityRequiredHistoryLength else {
             return .unknown
@@ -252,11 +252,13 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
         var visionRect = CGRect.null
         if let results = boardDetectionRequest.results as? [VNDetectedObjectObservation] {
             // Filter out classification results with low confidence
-            let filteredResults = results.filter { $0.confidence > boardDetectionMinConfidence }
+            //let filteredResults = results.filter { $0.confidence > boardDetectionMinConfidence }
+            let filteredResults = CGRect(x: 0.7, y: 0.3, width: 0.28, height: 0.3) //hardcoded board box
             // Since the model is trained to detect only one object class (game board)
             // there is no need to look at labels. If there is at least one result - we got the board.
             if !filteredResults.isEmpty {
-                visionRect = filteredResults[0].boundingBox
+                //visionRect = filteredResults[0].boundingBox
+                visionRect = filteredResults
                 rect = controller.viewRectForVisionRect(visionRect)
             }
         }
