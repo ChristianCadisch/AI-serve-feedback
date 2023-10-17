@@ -191,6 +191,7 @@ class SetupViewController: UIViewController {
     }
     
     var sceneStability: SceneStabilityResult {
+        return .stable
         // Determine if we have enough evidence of stability.
         guard sceneStabilityHistoryPoints.count > sceneStabilityRequiredHistoryLength else {
             return .unknown
@@ -267,7 +268,7 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
         }
         updateBoundingBox(boardBoundingBox, withViewRect: rect, visionRect: visionRect)
         // If rect is nil we need to keep looking for the board, otherwise check the board placement
-        self.setupStage = (rect == nil) ? .detectingBoard : .detectingBoardPlacement
+        self.setupStage = .detectingBoardPlacement
     }
     
     private func detectBoardContours(_ controller: CameraViewController, _ buffer: CMSampleBuffer, _ orientation: CGImagePropertyOrientation) throws {
