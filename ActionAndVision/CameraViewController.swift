@@ -241,7 +241,7 @@ class CameraViewController: UIViewController {
                     let stateMachine = self.gameManager.stateMachine
                     if stateMachine.currentState is GameManager.SetupCameraState {
                         // Once we received first buffer we are ready to proceed to the next state
-                        stateMachine.enter(GameManager.DetectingBoardState.self)
+                        stateMachine.enter(GameManager.DetectingPlayerState.self)
                     }
                 }
             }
@@ -273,7 +273,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             let stateMachine = self.gameManager.stateMachine
             if stateMachine.currentState is GameManager.SetupCameraState {
                 // Once we received first buffer we are ready to proceed to the next state
-                stateMachine.enter(GameManager.DetectingBoardState.self)
+                stateMachine.enter(GameManager.DetectingPlayerState.self)
             }
         }
     }

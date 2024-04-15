@@ -6,7 +6,7 @@ View that displays a speed gauge.
 */
 
 import UIKit
-
+/*
 class DashboardView: UIView, AnimatedTransitioning {
     
     var speed = 0.0 {
@@ -68,3 +68,4 @@ class DashboardView: UIView, AnimatedTransitioning {
         layer.addSublayer(speedLayer)
     }
 }
+*/

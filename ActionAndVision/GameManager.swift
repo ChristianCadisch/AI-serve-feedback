@@ -36,12 +36,12 @@ class GameManager {
     
     class SetupCameraState: State {
     }
-    
+    /*
     class DetectingBoardState: State {
     }
     
     class DetectedBoardState: State {
-    }
+    }*/
 
     class DetectingPlayerState: State {
     }
@@ -61,12 +61,12 @@ class GameManager {
     fileprivate var activeObservers = [UIViewController: NSObjectProtocol]()
     
     let stateMachine: GKStateMachine
-    var boardRegion = CGRect.null
-    var holeRegion = CGRect.null
+    //var boardRegion = CGRect.null
+    //var holeRegion = CGRect.null
     var recordedVideoSource: AVAsset?
     var playerStats = PlayerStats()
     var lastThrowMetrics = ThrowMetrics()
-    var pointToMeterMultiplier = Double.nan
+    //var pointToMeterMultiplier = Double.nan
     var previewImage = UIImage()
     
     static var shared = GameManager()
@@ -75,9 +75,9 @@ class GameManager {
         // Possible states with valid next states.
         let states = [
             InactiveState([SetupCameraState.self]),
-            SetupCameraState([DetectingBoardState.self]),
-            DetectingBoardState([DetectedBoardState.self]),
-            DetectedBoardState([DetectingPlayerState.self]),
+            SetupCameraState([DetectingPlayerState.self]),
+            //DetectingBoardState([DetectedBoardState.self]),
+            //DetectedBoardState([DetectingPlayerState.self]),
             DetectingPlayerState([DetectedPlayerState.self]),
             DetectedPlayerState([TrackThrowsState.self]),
             TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self]),
@@ -94,10 +94,10 @@ class GameManager {
     
     func reset() {
         // Reset all stored values
-        boardRegion = .null
+        //boardRegion = .null
         recordedVideoSource = nil
         playerStats = PlayerStats()
-        pointToMeterMultiplier = .nan
+        //pointToMeterMultiplier = .nan
         // Remove all observers and enter inactive state.
         let notificationCenter = NotificationCenter.default
         for observer in activeObservers {

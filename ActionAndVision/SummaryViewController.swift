@@ -45,6 +45,7 @@ class SummaryViewController: UIViewController {
         // Fetch saved throw paths from playerStats and draw each throw on a TrajectoryView.
         let paths = stats.throwPaths
         let frame = view.bounds
+        /*
         for path in paths {
             let trajectoryView = TrajectoryView(frame: frame)
             trajectoryView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +59,6 @@ class SummaryViewController: UIViewController {
                 trajectoryView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
             ])
             trajectoryView.addPath(path)
-        }
+        }*/
     }
 }

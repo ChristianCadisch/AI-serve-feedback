@@ -19,21 +19,21 @@ class SetupViewController: UIViewController {
     @IBOutlet var statusLabel: OverlayLabel!
  
     private let gameManager = GameManager.shared
-    private let boardLocationGuide = BoundingBoxView()
-    private let boardBoundingBox = BoundingBoxView()
+    //private let boardLocationGuide = BoundingBoxView()
+    //private let boardBoundingBox = BoundingBoxView()
 
-    private var boardDetectionRequest: VNCoreMLRequest!
-    private let boardDetectionMinConfidence: VNConfidence = 0.6
+    //private var boardDetectionRequest: VNCoreMLRequest!
+    //private let boardDetectionMinConfidence: VNConfidence = 0.6
     
     enum SceneSetupStage {
-        case detectingBoard
-        case detectingBoardPlacement
+        //case detectingBoard
+        //case detectingBoardPlacement
         case detectingSceneStability
-        case detectingBoardContours
+        //case detectingBoardContours
         case setupComplete
     }
 
-    private var setupStage = SceneSetupStage.detectingBoard
+    private var setupStage = SceneSetupStage.detectingSceneStability
     
     enum SceneStabilityResult {
         case unknown
@@ -48,6 +48,7 @@ class SetupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /*
         boardLocationGuide.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         boardLocationGuide.borderWidth = 3
         boardLocationGuide.borderCornerRadius = 4
@@ -61,7 +62,7 @@ class SetupViewController: UIViewController {
         boardBoundingBox.borderCornerSize = 0
         boardBoundingBox.backgroundOpacity = 0.45
         boardBoundingBox.isHidden = true
-        view.addSubview(boardBoundingBox)
+        view.addSubview(boardBoundingBox)*/
         updateSetupState()
     }
 
@@ -70,11 +71,11 @@ class SetupViewController: UIViewController {
         do {
             // Create Vision request based on CoreML model
             let model = try VNCoreMLModel(for: GameBoardDetector(configuration: MLModelConfiguration()).model)
-            boardDetectionRequest = VNCoreMLRequest(model: model)
+            //boardDetectionRequest = VNCoreMLRequest(model: model)
             // Since board is close to the side of a landscape image,
             // we need to set crop and scale option to scaleFit.
             // By default vision request will run on centerCrop.
-            boardDetectionRequest.imageCropAndScaleOption = .scaleFit
+            //boardDetectionRequest.imageCropAndScaleOption = .scaleFit
         } catch {
             let error = AppError.createRequestError(reason: "Could not create Vision request for board detector")
             AppError.display(error, inViewController: self)
@@ -94,25 +95,27 @@ class SetupViewController: UIViewController {
     }
     
     func updateSetupState() {
-        let boardBox = boardBoundingBox
+        //let boardBox = boardBoundingBox
         DispatchQueue.main.async {
             switch self.setupStage {
-            case .detectingBoard:
-                self.statusLabel.text = "Locating Board"
-            case .detectingBoardPlacement:
+            //case .detectingBoard:
+             //   self.statusLabel.text = "Locating Board"
+            //case .detectingBoardPlacement:
                 // Board placement guide is shown only when using camera feed.
                 // Otherwise we always assume the board is placed correctly.
-                var boxPlacedCorrectly = true
-                if !self.boardLocationGuide.isHidden {
-                    boxPlacedCorrectly = boardBox.containedInside(self.boardLocationGuide)
-                }
+              //  var boxPlacedCorrectly = true
+                //if !self.boardLocationGuide.isHidden {
+                //    boxPlacedCorrectly = boardBox.containedInside(self.boardLocationGuide)
+                //}
+               // self.setupStage = .detectingSceneStability
+                /*
                 boardBox.borderColor = boxPlacedCorrectly ? #colorLiteral(red: 0.4641711116, green: 1, blue: 0, alpha: 1) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
                 if boxPlacedCorrectly {
                     self.statusLabel.text = "Keep Device Stationary"
                     self.setupStage = .detectingSceneStability
                 } else {
                     self.statusLabel.text = "Place Board into the Box"
-                }
+                }*/
             case .detectingSceneStability:
                 switch self.sceneStability {
                 case .unknown:
@@ -120,16 +123,16 @@ class SetupViewController: UIViewController {
                 case .unstable:
                     self.previousSampleBuffer = nil
                     self.sceneStabilityHistoryPoints.removeAll()
-                    self.setupStage = .detectingBoardPlacement
+                    //self.setupStage = .detectingBoardPlacement
                 case .stable:
-                    self.setupStage = .detectingBoardContours
+                    self.setupStage = .setupComplete
                 }
             default:
                 break
             }
         }
     }
-    
+    /*
     func analyzeBoardContours(_ contours: [VNContour]) -> (edgePath: CGPath, holePath: CGPath)? {
         // Simplify contours and ignore resulting contours with less than 3 points.
         let polyContours = contours.compactMap { (contour) -> VNContour? in
@@ -189,7 +192,7 @@ class SetupViewController: UIViewController {
         
         return (boardPath.cgPath, detectedHolePath)
     }
-    
+    */
     var sceneStability: SceneStabilityResult {
         return .stable //this direct return statement skips the stability checks
         // Determine if we have enough evidence of stability.
@@ -219,10 +222,6 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
                 return
             case .detectingSceneStability:
                 try checkSceneStability(controller, buffer, orientation)
-            case .detectingBoardContours:
-                try detectBoardContours(controller, buffer, orientation)
-            case .detectingBoard, .detectingBoardPlacement:
-                try detectBoard(controller, buffer, orientation)
             }
             updateSetupState()
         } catch {
@@ -243,7 +242,8 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
             sceneStabilityHistoryPoints.append(CGPoint(x: transform.tx, y: transform.ty))
         }
     }
-
+    
+    /*
     fileprivate func detectBoard(_ controller: CameraViewController, _ buffer: CMSampleBuffer, _ orientation: CGImagePropertyOrientation) throws {
         // This is where we detect the board.
         let visionHandler = VNImageRequestHandler(cmSampleBuffer: buffer, orientation: orientation, options: [:])
@@ -270,6 +270,7 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
         }
         updateBoundingBox(boardBoundingBox, withViewRect: rect, visionRect: visionRect)
         // If rect is nil we need to keep looking for the board, otherwise check the board placement
+        
         self.setupStage = .detectingBoardPlacement
     }
     
@@ -324,9 +325,9 @@ extension SetupViewController: CameraViewControllerOutputDelegate {
                 self.gameManager.stateMachine.enter(GameManager.DetectedBoardState.self)
             }
         }
-    }
+    }*/
 }
-
+/*
 extension SetupViewController: GameStateChangeObserver {
     func gameManagerDidEnter(state: GameManager.State, from previousState: GameManager.State?) {
         switch state {
@@ -341,3 +342,4 @@ extension SetupViewController: GameStateChangeObserver {
         }
     }
 }
+*/

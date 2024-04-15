@@ -85,8 +85,8 @@ extension RootViewController: GameStateChangeObserver {
         // Create an overlay view controller based on the game state
         let controllerToPresent: UIViewController
         switch state {
-        case is GameManager.DetectingBoardState:
-            controllerToPresent = SetupViewController()
+        //case is GameManager.DetectingBoardState:
+        //    controllerToPresent = SetupViewController()
         case is GameManager.DetectingPlayerState:
             controllerToPresent = GameViewController()
         case is GameManager.ShowSummaryState:

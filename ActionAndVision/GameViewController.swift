@@ -24,28 +24,30 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     @IBOutlet weak var speedLabel: UILabel!
     @IBOutlet weak var speedStackView: UIStackView!
     @IBOutlet weak var throwTypeImage: UIImageView!
+    /*
     @IBOutlet weak var dashboardView: DashboardView!
     @IBOutlet weak var underhandThrowView: ProgressView!
     @IBOutlet weak var overhandThrowView: ProgressView!
-    @IBOutlet weak var underlegThrowView: ProgressView!
+    @IBOutlet weak var underlegThrowView: ProgressView!*/
     private let gameManager = GameManager.shared
     private let detectPlayerRequest = VNDetectHumanBodyPoseRequest()
     private var playerDetected = false
     private var isBagInTargetRegion = false
     private var throwRegion = CGRect.null
     private var targetRegion = CGRect.null
-    private let trajectoryView = TrajectoryView()
+    //private let trajectoryView = TrajectoryView()
     private let playerBoundingBox = BoundingBoxView()
+    //private let roiBoundingBox = BoundingBoxView()
     private let jointSegmentView = JointSegmentView()
     private var noObservationFrameCount = 0
     private var trajectoryInFlightPoseObservations = 0
     private var showSummaryGesture: UITapGestureRecognizer!
-    private let trajectoryQueue = DispatchQueue(label: "com.ActionAndVision.trajectory", qos: .userInteractive)
+    //private let trajectoryQueue = DispatchQueue(label: "com.ActionAndVision.trajectory", qos: .userInteractive)
     private let bodyPoseDetectionMinConfidence: VNConfidence = 0.6
-    private let trajectoryDetectionMinConfidence: VNConfidence = 0.9
+    //private let trajectoryDetectionMinConfidence: VNConfidence = 0.4
     private let bodyPoseRecognizedPointMinConfidence: VNConfidence = 0.1
-    private lazy var detectTrajectoryRequest: VNDetectTrajectoriesRequest! =
-                        VNDetectTrajectoriesRequest(frameAnalysisSpacing: .zero, trajectoryLength: GameConstants.trajectoryLength)
+    //private lazy var detectTrajectoryRequest: VNDetectTrajectoriesRequest! =
+     //                   VNDetectTrajectoriesRequest(frameAnalysisSpacing: .zero, trajectoryLength: GameConstants.trajectoryLength)
 
     //Variables - KPIs
     var lastThrowMetrics: ThrowMetrics {
@@ -81,7 +83,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        detectTrajectoryRequest = nil
+        //detectTrajectoryRequest = nil
     }
 
     func getScoreLabelAttributedStringForScore(_ score: Int) -> NSAttributedString {
@@ -93,42 +95,49 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
 
     func setUIElements() {
         resetKPILabels()
+        
         playerBoundingBox.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         playerBoundingBox.backgroundOpacity = 0
         playerBoundingBox.isHidden = true
+        /*roiBoundingBox.borderColor = UIColor(red: 200, green: 0, blue: 0, alpha: 0.4)
+        roiBoundingBox.backgroundOpacity = 0
+        roiBoundingBox.isHidden = false
+        view.addSubview(roiBoundingBox)*/
         view.addSubview(playerBoundingBox)
         view.addSubview(jointSegmentView)
-        view.addSubview(trajectoryView)
+        //view.addSubview(trajectoryView)
         gameStatusLabel.text = "Waiting for player"
         // Set throw type counters
+        /*
         underhandThrowView.throwType = .underhand
         overhandThrowView.throwType = .overhand
-        underlegThrowView.throwType = .underleg
+        underlegThrowView.throwType = .underleg*/
         scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
     }
 
     func resetKPILabels() {
         // Reset Speed and throwType image
-        dashboardView.speed = 0
-        throwTypeImage.image = nil
+        //dashboardView.speed = 0
+        //throwTypeImage.image = nil
         // Hode KPI labels
-        dashboardView.isHidden = true
-        speedStackView.isHidden = true
-        metricsStackView.isHidden = true
+        //dashboardView.isHidden = true
+        //speedStackView.isHidden = true
+        //metricsStackView.isHidden = true
     }
 
     func updateKPILabels() {
         // Show KPI labels
-        dashboardView.isHidden = false
-        speedStackView.isHidden = false
-        metricsStackView.isHidden = false
+        //dashboardView.isHidden = false
+        //speedStackView.isHidden = false
+        //metricsStackView.isHidden = false
         // Update text for KPI labels
-        speedLabel.text = "\(lastThrowMetrics.releaseSpeed)"
-        throwTypeLabel.text = lastThrowMetrics.throwType.rawValue.capitalized
-        releaseAngleLabel.text = "\(lastThrowMetrics.releaseAngle)°"
-        scoreLabel.attributedText = getScoreLabelAttributedStringForScore(gameManager.playerStats.totalScore)
+        //speedLabel.text = "\(lastThrowMetrics.releaseSpeed)"
+        //throwTypeLabel.text = lastThrowMetrics.throwType.rawValue.capitalized
+        //releaseAngleLabel.text = "\(lastThrowMetrics.releaseAngle)°"
+        //scoreLabel.attributedText = getScoreLabelAttributedStringForScore(gameManager.playerStats.totalScore)
         // Update throw type counters
-        throwTypeImage.image = UIImage(named: lastThrowMetrics.throwType.rawValue)
+        //throwTypeImage.image = UIImage(named: lastThrowMetrics.throwType.rawValue)
+        /*
         switch lastThrowMetrics.throwType {
         case .overhand:
             overhandThrowView.incrementThrowCount()
@@ -138,10 +147,10 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             underlegThrowView.incrementThrowCount()
         default:
             break
-        }
+        }*/
         // Update score labels
-        let beanBagView = beanBags[playerStats.throwCount - 1]
-        beanBagView.image = UIImage(named: "Score\(lastThrowMetrics.score.rawValue)")
+        //let beanBagView = beanBags[playerStats.throwCount - 1]
+        //beanBagView.image = UIImage(named: "Score\(lastThrowMetrics.score.rawValue)")
     }
 
     func updateBoundingBox(_ boundingBox: BoundingBoxView, withRect rect: CGRect?) {
@@ -173,9 +182,10 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         // We will use these observations for action classification once the throw is complete.
         if gameManager.stateMachine.currentState is GameManager.TrackThrowsState {
             playerStats.storeObservation(observation)
+            /*
             if trajectoryView.inFlight {
                 trajectoryInFlightPoseObservations += 1
-            }
+            }*/
         }
         return box
     }
@@ -183,6 +193,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     // Define regions to filter relavant trajectories for the game
     // throwRegion: Region to the right of the player to detect start of throw
     // targetRegion: Region around the board to determine end of throw
+    /*
     func resetTrajectoryRegions() {
         let boardRegion = gameManager.boardRegion
         let playerRegion = playerBoundingBox.frame
@@ -191,18 +202,23 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         let targetWindowXBuffer: CGFloat = 50
         let throwRegionWidth: CGFloat = 400
         throwRegion = CGRect(x: playerRegion.maxX + throwWindowXBuffer, y: 0, width: throwRegionWidth, height: playerRegion.maxY - throwWindowYBuffer)
-        targetRegion = CGRect(x: boardRegion.minX - targetWindowXBuffer, y: 0,
-                              width: boardRegion.width + 2 * targetWindowXBuffer, height: boardRegion.maxY)
-    }
+        //throwRegion = CGRect(x: playerRegion.minX - 200, y: 0, width: 1000, height: 1000)
+        targetRegion = CGRect(x: boardRegion.minX - targetWindowXBuffer, y: 0, width: boardRegion.width + 2 * targetWindowXBuffer, height: boardRegion.maxY)
+        //targetRegion = CGRect(x: 0, y: 0, width: 500, height: 500)
+        print("min X: ", boardRegion.minX)
+    }*/
 
     // Adjust the throwRegion based on location of the bag.
     // Move the throwRegion to the right until we reach the target region.
+    /*
     func updateTrajectoryRegions() {
         let trajectoryLocation = trajectoryView.fullTrajectory.currentPoint
-        let didBagCrossCenterOfThrowRegion = trajectoryLocation.x > throwRegion.origin.x + throwRegion.width / 2
+        let didBagCrossCenterOfThrowRegion = trajectoryLocation.x > throwRegion.origin.x
+        /*
         guard !(throwRegion.contains(trajectoryLocation) && didBagCrossCenterOfThrowRegion) else {
             return
         }
+         */
         // Overlap buffer window between throwRegion and targetRegion
         let overlapWindowBuffer: CGFloat = 50
         if targetRegion.contains(trajectoryLocation) {
@@ -216,51 +232,28 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     }
     
     func processTrajectoryObservations(_ controller: CameraViewController, _ results: [VNTrajectoryObservation]) {
-        if self.trajectoryView.inFlight && results.count < 1 {
-            // The trajectory is already in flight but VNDetectTrajectoriesRequest doesn't return any trajectory observations.
-            self.noObservationFrameCount += 1
-            if self.noObservationFrameCount > GameConstants.noObservationFrameLimit {
-                // Ending the throw as we don't see any observations in consecutive GameConstants.noObservationFrameLimit frames.
-                self.updatePlayerStats(controller)
-            }
-        } else {
-            for path in results where path.confidence > trajectoryDetectionMinConfidence {
-                // VNDetectTrajectoriesRequest has returned some trajectory observations.
-                // Process the path only when the confidence is over 90%.
-                self.trajectoryView.duration = path.timeRange.duration.seconds
-                self.trajectoryView.points = path.detectedPoints
-                self.trajectoryView.perform(transition: .fadeIn, duration: 0.25)
-                if !self.trajectoryView.fullTrajectory.isEmpty {
-                    // Hide the previous throw metrics once a new throw is detected.
-                    if !self.dashboardView.isHidden {
-                        self.resetKPILabels()
-                    }
-                    self.updateTrajectoryRegions()
-                    if self.trajectoryView.isThrowComplete {
-                        // Update the player statistics once the throw is complete.
-                        self.updatePlayerStats(controller)
-                    }
-                }
-                self.noObservationFrameCount = 0
-            }
+        for path in results {
+            self.trajectoryView.points = path.detectedPoints
+            self.trajectoryView.perform(transition: .fadeIn, duration: 0.25)
         }
     }
-    
+    */
     func updatePlayerStats(_ controller: CameraViewController) {
-        let finalBagLocation = trajectoryView.finalBagLocation
-        playerStats.storePath(self.trajectoryView.fullTrajectory.cgPath)
-        trajectoryView.resetPath()
+        //let finalBagLocation = trajectoryView.finalBagLocation
+        //playerStats.storePath(self.trajectoryView.fullTrajectory.cgPath)
+        //trajectoryView.resetPath()
         lastThrowMetrics.updateThrowType(playerStats.getLastThrowType())
-        let score = computeScore(controller.viewPointForVisionPoint(finalBagLocation))
+        //let score = computeScore(controller.viewPointForVisionPoint(finalBagLocation))
         // Compute the speed in mph
         // trajectoryView.speed is in points/second, convert that to meters/second by multiplying the pointToMeterMultiplier.
         // 1 meters/second = 2.24 miles/hour
-        let releaseSpeed = round(trajectoryView.speed * gameManager.pointToMeterMultiplier * 2.24 * 100) / 100
+        //let releaseSpeed = round(trajectoryView.speed * gameManager.pointToMeterMultiplier * 2.24 * 100) / 100
+        let releaseSpeed = 10.0
         let releaseAngle = playerStats.getReleaseAngle()
-        lastThrowMetrics.updateMetrics(newScore: score, speed: releaseSpeed, angle: releaseAngle)
-        self.gameManager.stateMachine.enter(GameManager.ThrowCompletedState.self)
+        //lastThrowMetrics.updateMetrics(newScore: score, speed: releaseSpeed, angle: releaseAngle)
+        //self.gameManager.stateMachine.enter(GameManager.ThrowCompletedState.self)
     }
-    
+    /*
     func computeScore(_ finalBagLocation: CGPoint) -> Scoring {
         let heightBuffer: CGFloat = 100
         let boardRegion = gameManager.boardRegion
@@ -282,7 +275,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             // Bag landed on the board
             return lastThrowMetrics.throwType == .underleg ? Scoring.five : Scoring.one
         }
-    }
+    } */
 }
 
 extension GameViewController: GameStateChangeObserver {
@@ -292,20 +285,22 @@ extension GameViewController: GameStateChangeObserver {
             playerDetected = true
             playerStats.reset()
             playerBoundingBox.perform(transition: .fadeOut, duration: 1.0)
+            //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             gameStatusLabel.text = "Go"
             gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
                 self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
             }
         case is GameManager.TrackThrowsState:
-            resetTrajectoryRegions()
-            trajectoryView.roi = throwRegion
+            //resetTrajectoryRegions()
+            //trajectoryView.roi = throwRegion
+            print("letss goooo")
         case is GameManager.ThrowCompletedState:
-            dashboardView.speed = lastThrowMetrics.releaseSpeed
-            dashboardView.animateSpeedChart()
+            //dashboardView.speed = lastThrowMetrics.releaseSpeed
+            //dashboardView.animateSpeedChart()
             playerStats.adjustMetrics(score: lastThrowMetrics.score, speed: lastThrowMetrics.releaseSpeed,
                                       releaseAngle: lastThrowMetrics.releaseAngle, throwType: lastThrowMetrics.throwType)
             playerStats.resetObservations()
-            trajectoryInFlightPoseObservations = 0
+            //trajectoryInFlightPoseObservations = 0
             self.updateKPILabels()
             
             gameStatusLabel.text = lastThrowMetrics.score.rawValue > 0 ? "+\(lastThrowMetrics.score.rawValue)" : ""
@@ -330,9 +325,10 @@ extension GameViewController: CameraViewControllerOutputDelegate {
                 // Get the frame of rendered view
                 let normalizedFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
                 self.jointSegmentView.frame = controller.viewRectForVisionRect(normalizedFrame)
-                self.trajectoryView.frame = controller.viewRectForVisionRect(normalizedFrame)
+                //self.trajectoryView.frame = controller.viewRectForVisionRect(normalizedFrame)
             }
             // Perform the trajectory request in a separate dispatch queue.
+            /*
             trajectoryQueue.async {
                 do {
                     try visionHandler.perform([self.detectTrajectoryRequest])
@@ -345,39 +341,30 @@ extension GameViewController: CameraViewControllerOutputDelegate {
                 } catch {
                     AppError.display(error, inViewController: self)
                 }
-            }
+            }*/
         }
         // Body pose request is performed on the same camera queue to ensure the highlighted joints are aligned with the player.
         // Run bodypose request for additional GameConstants.maxPostReleasePoseObservations frames after the first trajectory observation is detected.
-        if !(self.trajectoryView.inFlight && self.trajectoryInFlightPoseObservations >= GameConstants.maxTrajectoryInFlightPoseObservations) {
-            do {
-                try visionHandler.perform([detectPlayerRequest])
-                if let result = detectPlayerRequest.results?.first {
-                    let box = humanBoundingBox(for: result)
-                    let boxView = playerBoundingBox
-                    DispatchQueue.main.async {
-                        let inset: CGFloat = -20.0
-                        let viewRect = controller.viewRectForVisionRect(box).insetBy(dx: inset, dy: inset)
-                        self.updateBoundingBox(boxView, withRect: viewRect)
-                        if !self.playerDetected && !boxView.isHidden {
-                            self.gameStatusLabel.alpha = 0
-                            self.resetTrajectoryRegions()
-                            self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
-                        }
+        do {
+            try visionHandler.perform([detectPlayerRequest])
+            if let result = detectPlayerRequest.results?.first {
+                let box = humanBoundingBox(for: result)
+                let boxView = playerBoundingBox
+                DispatchQueue.main.async {
+                    let inset: CGFloat = -20.0
+                    let viewRect = controller.viewRectForVisionRect(box).insetBy(dx: inset, dy: inset)
+                    self.updateBoundingBox(boxView, withRect: viewRect)
+                    if !self.playerDetected && !boxView.isHidden {
+                        self.gameStatusLabel.alpha = 0
+                        //self.resetTrajectoryRegions()
+                        self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
                     }
                 }
-            } catch {
-                AppError.display(error, inViewController: self)
             }
-        } else {
-            // Hide player bounding box
-            DispatchQueue.main.async {
-                if !self.playerBoundingBox.isHidden {
-                    self.playerBoundingBox.isHidden = true
-                    self.jointSegmentView.resetView()
-                }
-            }
+        } catch {
+            AppError.display(error, inViewController: self)
         }
+        
     }
 }
 
