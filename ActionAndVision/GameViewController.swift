@@ -71,10 +71,12 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func viewDidLoad() {
         super.viewDidLoad()
         setUIElements()
+        jointSegmentView.delegate = self
         showSummaryGesture = UITapGestureRecognizer(target: self, action: #selector(handleShowSummaryGesture(_:)))
         showSummaryGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(showSummaryGesture)
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -151,6 +153,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         // Update score labels
         //let beanBagView = beanBags[playerStats.throwCount - 1]
         //beanBagView.image = UIImage(named: "Score\(lastThrowMetrics.score.rawValue)")
+        scoreLabel.text = "Hits: \(playerStats.hits)"
     }
 
     func updateBoundingBox(_ boundingBox: BoundingBoxView, withRect rect: CGRect?) {
@@ -374,5 +377,16 @@ extension GameViewController {
         if gesture.state == .ended {
             self.gameManager.stateMachine.enter(GameManager.ShowSummaryState.self)
         }
+    }
+}
+
+
+extension GameViewController: JointSegmentViewDelegate {
+    func jointSegmentViewDidDetectServe(_ jointSegmentView: JointSegmentView) {
+        /*if let currentScore = Int(scoreLabel.text?.components(separatedBy: " ").last ?? "0") {
+            scoreLabel.text = "Hits: \(playerStats.hits + 1)"
+        }*/
+        playerStats.hits += 1
+        scoreLabel.text = "Hits: \(playerStats.hits)"
     }
 }

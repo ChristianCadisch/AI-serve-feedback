@@ -46,6 +46,7 @@ struct ThrowMetrics {
 }
 
 struct PlayerStats {
+    var hits = 0
     var totalScore = 0
     var throwCount = 0
     var topSpeed = 0.0

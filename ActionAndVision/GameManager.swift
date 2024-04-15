@@ -36,12 +36,7 @@ class GameManager {
     
     class SetupCameraState: State {
     }
-    /*
-    class DetectingBoardState: State {
-    }
-    
-    class DetectedBoardState: State {
-    }*/
+
 
     class DetectingPlayerState: State {
     }
@@ -54,6 +49,17 @@ class GameManager {
     
     class ThrowCompletedState: State {
     }
+    
+    
+    class ServeDetectedState: State {
+        
+        override func didEnter(from previousState: GKState?) {
+                super.didEnter(from: previousState)
+                GameManager.shared.playerStats.hits += 1  // Assuming 'hits' is your counter for serves
+                print("Serve detected. Total serves: \(GameManager.shared.playerStats.hits)")
+            }
+    }
+    
 
     class ShowSummaryState: State {
     }
@@ -72,25 +78,23 @@ class GameManager {
     static var shared = GameManager()
     
     private init() {
-        // Possible states with valid next states.
         let states = [
             InactiveState([SetupCameraState.self]),
             SetupCameraState([DetectingPlayerState.self]),
-            //DetectingBoardState([DetectedBoardState.self]),
-            //DetectedBoardState([DetectingPlayerState.self]),
             DetectingPlayerState([DetectedPlayerState.self]),
             DetectedPlayerState([TrackThrowsState.self]),
-            TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self]),
+            TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self, ServeDetectedState.self]),
             ThrowCompletedState([ShowSummaryState.self, TrackThrowsState.self]),
+            ServeDetectedState([TrackThrowsState.self, ShowSummaryState.self]),  // Example transitions
             ShowSummaryState([DetectingPlayerState.self])
         ]
-        // Any state besides Inactive can be returned to Inactive.
+        // Allow transitions to Inactive from any state except itself
         for state in states where !(state is InactiveState) {
             state.addValidNextState(InactiveState.self)
         }
-        // Create state machine.
         stateMachine = GKStateMachine(states: states)
     }
+
     
     func reset() {
         // Reset all stored values
