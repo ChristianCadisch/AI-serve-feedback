@@ -14,6 +14,15 @@ protocol CameraViewControllerOutputDelegate: class {
 
 class CameraViewController: UIViewController {
     
+    
+
+    func pauseVideoPlayback() {
+        videoRenderView?.pausePlayback()
+    }
+    func resumeVideoPlayback() {
+        videoRenderView?.player?.play()
+    }
+    
     weak var outputDelegate: CameraViewControllerOutputDelegate?
     private let videoDataOutputQueue = DispatchQueue(label: "CameraFeedDataOutput", qos: .userInitiated,
                                                      attributes: [], autoreleaseFrequency: .workItem)

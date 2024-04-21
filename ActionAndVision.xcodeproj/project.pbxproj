@@ -14,7 +14,6 @@
 		5F982D2924912200006534BC /* AnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2824912200006534BC /* AnimatedTransitioning.swift */; };
 		5F982D2B2491233C006534BC /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2A2491233C006534BC /* BoundingBoxView.swift */; };
 		5F982D2D24912A75006534BC /* JointSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2C24912A75006534BC /* JointSegmentView.swift */; };
-		5F982D3124912CE4006534BC /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3024912CE4006534BC /* DashboardView.swift */; };
 		5F982D3324912D4A006534BC /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3224912D4A006534BC /* ProgressView.swift */; };
 		5F982D3524912DD2006534BC /* OverlayLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3424912DD1006534BC /* OverlayLabel.swift */; };
 		5F982D3724912E7C006534BC /* VideoOutputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3624912E7C006534BC /* VideoOutputViews.swift */; };
@@ -45,7 +44,6 @@
 		5F982D2824912200006534BC /* AnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTransitioning.swift; sourceTree = "<group>"; };
 		5F982D2A2491233C006534BC /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		5F982D2C24912A75006534BC /* JointSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointSegmentView.swift; sourceTree = "<group>"; };
-		5F982D3024912CE4006534BC /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		5F982D3224912D4A006534BC /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		5F982D3424912DD1006534BC /* OverlayLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayLabel.swift; sourceTree = "<group>"; };
 		5F982D3624912E7C006534BC /* VideoOutputViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOutputViews.swift; sourceTree = "<group>"; };
@@ -85,7 +83,6 @@
 			children = (
 				5F982D2824912200006534BC /* AnimatedTransitioning.swift */,
 				5F982D2A2491233C006534BC /* BoundingBoxView.swift */,
-				5F982D3024912CE4006534BC /* DashboardView.swift */,
 				5F982D2C24912A75006534BC /* JointSegmentView.swift */,
 				5F982D3424912DD1006534BC /* OverlayLabel.swift */,
 				5F982D3224912D4A006534BC /* ProgressView.swift */,
@@ -244,7 +241,6 @@
 				DFC5C176249839F900392F58 /* PlayerActionClassifier.mlmodel in Sources */,
 				DF3EC82D23D65E340007EAE9 /* AppDelegate.swift in Sources */,
 				DF3EC82F23D65E340007EAE9 /* SceneDelegate.swift in Sources */,
-				5F982D3124912CE4006534BC /* DashboardView.swift in Sources */,
 				5F24EFD624756AD400EA0CBA /* GameBoardDetector.mlmodel in Sources */,
 				DF1A92A623E7575A00A9FD49 /* Common.swift in Sources */,
 				5F982D3724912E7C006534BC /* VideoOutputViews.swift in Sources */,

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n2J-QF-vmh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n2J-QF-vmh">
     <device id="retina5_9" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -154,7 +155,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2GY-Bw-CQb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="X9F-PC-OpA" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-8" y="2512"/>
+            <point key="canvasLocation" x="-8.1280788177339911" y="2511.1999999999998"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="rx1-ca-vqF">
@@ -165,16 +166,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uJS-qV-nIk">
-                                <rect key="frame" x="44" y="3.3333333333333428" width="724" height="368.33333333333326"/>
+                                <rect key="frame" x="50.666666666666686" y="3.3333333333333428" width="710.66666666666652" height="368.33333333333326"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Setup Instructions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KYs-Dp-G40">
-                                        <rect key="frame" x="20" y="56" width="704" height="41"/>
+                                        <rect key="frame" x="20" y="56" width="690.66666666666663" height="41"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZTv-5D-Gnl" userLabel="View1">
-                                        <rect key="frame" x="20" y="117.66666666666669" width="334" height="67"/>
+                                        <rect key="frame" x="20" y="117.66666666666669" width="327.33333333333331" height="67"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="753" text="1." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jav-CF-X7K">
                                                 <rect key="frame" x="0.0" y="0.0" width="15" height="24"/>
@@ -183,7 +184,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Secure your device, such as on a tripod, to stabilize the camera’s view of the game." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DcQ-pg-7Ac">
-                                                <rect key="frame" x="19" y="2.6666666666666714" width="315" height="64.333333333333329"/>
+                                                <rect key="frame" x="19" y="2.6666666666666714" width="308.33333333333331" height="64.333333333333329"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -200,7 +201,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Tv-LH-efO" userLabel="View2">
-                                        <rect key="frame" x="370" y="117.66666666666669" width="334" height="45"/>
+                                        <rect key="frame" x="363.33333333333337" y="117.66666666666669" width="327.33333333333337" height="45"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="753" text="2." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLd-qP-ffM">
                                                 <rect key="frame" x="0.0" y="0.0" width="18.666666666666668" height="24"/>
@@ -209,7 +210,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place the game board to the right side of the screen view." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57t-oO-jGf">
-                                                <rect key="frame" x="22.666666666666686" y="2.6666666666666714" width="311.33333333333331" height="42.333333333333336"/>
+                                                <rect key="frame" x="22.666666666666686" y="2.6666666666666714" width="304.66666666666669" height="42.333333333333336"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -226,7 +227,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MW5-1c-jwb" userLabel="View3">
-                                        <rect key="frame" x="20" y="209.66666666666666" width="334" height="47.666666666666657"/>
+                                        <rect key="frame" x="20" y="209.66666666666666" width="327.33333333333331" height="47.666666666666657"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="753" text="3." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XhZ-8D-3zO">
                                                 <rect key="frame" x="0.0" y="0.0" width="18.333333333333332" height="24"/>
@@ -235,7 +236,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wait for the app to detect the board once the camera stabilizes." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRX-gr-BDt">
-                                                <rect key="frame" x="22.333333333333343" y="2.6666666666666572" width="311.66666666666663" height="45"/>
+                                                <rect key="frame" x="22.333333333333314" y="2.6666666666666572" width="305" height="45"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -252,7 +253,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rFn-ZE-7Vz" userLabel="View4">
-                                        <rect key="frame" x="370" y="209.66666666666666" width="334" height="47.666666666666657"/>
+                                        <rect key="frame" x="363.33333333333337" y="209.66666666666666" width="327.33333333333337" height="47.666666666666657"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="753" text="4." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7k-nt-Yun">
                                                 <rect key="frame" x="0.0" y="0.0" width="19" height="24"/>
@@ -261,7 +262,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Stand in view of the camera on the left side and face the game board." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8mb-SO-Eao">
-                                                <rect key="frame" x="23" y="2.6666666666666572" width="311" height="42.333333333333336"/>
+                                                <rect key="frame" x="23" y="2.6666666666666572" width="304.33333333333331" height="42.333333333333336"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -278,7 +279,7 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qn4-oa-kj7">
-                                        <rect key="frame" x="245" y="305.33333333333337" width="234" height="41"/>
+                                        <rect key="frame" x="238.33333333333337" y="305.33333333333337" width="234" height="41"/>
                                         <color key="backgroundColor" systemColor="systemBlueColor"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                         <inset key="contentEdgeInsets" minX="100" minY="10" maxX="100" maxY="10"/>
@@ -408,17 +409,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mkC-7h-Egc">
-                                <rect key="frame" x="185" y="79.666666666666686" width="442" height="216"/>
+                                <rect key="frame" x="185.66666666666666" y="80.000000000000014" width="440.66666666666674" height="215.33333333333337"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QKU-1G-iKv">
-                                        <rect key="frame" x="20" y="20" width="176" height="176"/>
+                                        <rect key="frame" x="20" y="20" width="175.33333333333334" height="175.33333333333334"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square.and.arrow.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LUg-aJ-tZU">
-                                                <rect key="frame" x="59" y="41.333333333333314" width="58" height="62.666666666666671"/>
+                                                <rect key="frame" x="59.000000000000028" y="37.666666666666664" width="57.333333333333343" height="65.666666666666657"/>
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="50" scale="medium"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" text="Upload Video" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uNg-H9-b3X">
-                                                <rect key="frame" x="36.666666666666657" y="110.99999999999999" width="103" height="20.000000000000014"/>
+                                                <rect key="frame" x="36.333333333333343" y="110.33333333333334" width="103" height="20"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -447,14 +448,14 @@
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5s-sv-Ydb">
-                                        <rect key="frame" x="246" y="20" width="176" height="176"/>
+                                        <rect key="frame" x="245.33333333333331" y="20" width="175.33333333333331" height="175.33333333333334"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7vw-iP-1rf">
-                                                <rect key="frame" x="52.666666666666686" y="50.666666666666643" width="71" height="47.666666666666671"/>
+                                                <rect key="frame" x="52.333333333333314" y="50" width="71" height="47.666666666666686"/>
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="50" scale="medium"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" text="Live Camera" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v9e-fK-227">
-                                                <rect key="frame" x="40.666666666666686" y="110.99999999999999" width="95" height="20.000000000000014"/>
+                                                <rect key="frame" x="40.333333333333314" y="110.33333333333334" width="95" height="20"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -518,20 +519,20 @@
     </scenes>
     <resources>
         <image name="App" width="248" height="248"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
-        <image name="video" catalog="system" width="128" height="83"/>
-        <image name="xmark.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="square.and.arrow.up" catalog="system" width="108" height="128"/>
+        <image name="video" catalog="system" width="128" height="82"/>
+        <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

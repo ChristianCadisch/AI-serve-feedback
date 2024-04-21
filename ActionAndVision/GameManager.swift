@@ -52,12 +52,6 @@ class GameManager {
     
     
     class ServeDetectedState: State {
-        
-        override func didEnter(from previousState: GKState?) {
-                super.didEnter(from: previousState)
-                GameManager.shared.playerStats.hits += 1  // Assuming 'hits' is your counter for serves
-                print("Serve detected. Total serves: \(GameManager.shared.playerStats.hits)")
-            }
     }
     
 
@@ -98,10 +92,8 @@ class GameManager {
     
     func reset() {
         // Reset all stored values
-        //boardRegion = .null
         recordedVideoSource = nil
         playerStats = PlayerStats()
-        //pointToMeterMultiplier = .nan
         // Remove all observers and enter inactive state.
         let notificationCenter = NotificationCenter.default
         for observer in activeObservers {

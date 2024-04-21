@@ -12,7 +12,6 @@
             <connections>
                 <outlet property="gameStatusLabel" destination="xSn-62-KuW" id="TOH-fN-32O"/>
                 <outlet property="scoreLabel" destination="SxD-3J-hkk" id="g6s-au-Hxg"/>
-                <outlet property="throwTypeImage" destination="X0K-gv-yFG" id="qb1-g4-R7U"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,13 +20,6 @@
             <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0K-gv-yFG">
-                    <rect key="frame" x="309.5" y="284" width="48" height="48"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="48" id="0b5-Fv-Sks"/>
-                        <constraint firstAttribute="width" constant="48" id="yqX-ET-qni"/>
-                    </constraints>
-                </imageView>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="xSn-62-KuW" customClass="OverlayLabel" customModule="ActionAndVision" customModuleProvider="target">
                     <rect key="frame" x="83.5" y="127.5" width="500" height="120"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

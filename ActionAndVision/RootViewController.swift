@@ -12,11 +12,28 @@ import UIKit
 class RootViewController: UIViewController {
     
     @IBOutlet weak var closeButton: UIButton!
+
+    @IBOutlet weak var continueButton: UIButton!
     
-    private var cameraViewController: CameraViewController!
+    var cameraViewController: CameraViewController!
     private var overlayParentView: UIView!
     private var overlayViewController: UIViewController!
     private let gameManager = GameManager.shared
+    
+    @objc private func handleServeNotification() {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+                self.cameraViewController.pauseVideoPlayback()
+            }
+        
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.cameraViewController.resumeVideoPlayback()
+            }
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +57,12 @@ class RootViewController: UIViewController {
         startObservingStateChanges()
         // Make sure close button stays in front of other views.
         view.bringSubviewToFront(closeButton)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleServeNotification), name: .serveDetected, object: nil)
+
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -66,6 +89,7 @@ class RootViewController: UIViewController {
         
         if let newOverlay = newOverlayViewController {
             newOverlay.view.frame = overlayParentView.bounds
+            newOverlay.view.isUserInteractionEnabled = true // Add this line
             addChild(newOverlay)
             newOverlay.beginAppearanceTransition(true, animated: true)
             overlayParentView.addSubview(newOverlay.view)

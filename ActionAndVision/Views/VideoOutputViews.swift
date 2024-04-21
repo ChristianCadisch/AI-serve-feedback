@@ -48,6 +48,9 @@ class CameraFeedView: UIView, NormalizedGeometryConverting {
 // MARK: - View for rendering video file contents
 class VideoRenderView: UIView, NormalizedGeometryConverting {
     private var renderLayer: AVPlayerLayer!
+    func pausePlayback() {
+            player?.pause()
+        }
     
     var player: AVPlayer? {
         get {

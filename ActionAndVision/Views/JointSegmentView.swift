@@ -89,11 +89,9 @@ class JointSegmentView: UIView, AnimatedTransitioning {
                     if yDifference < -0.1 {
                         if !serveDetected {
                             print("Tennis serve detected!")
-                            //scoreLabel.attributedText = "Serve"
                             serveDetected = true
                             delegate?.jointSegmentViewDidDetectServe(self)
-                            //GameManager.shared.stateMachine.enter(ServeDetectedState.self)
-                            
+                            NotificationCenter.default.post(name: .serveDetected, object: nil)
                         }
                     } else {
                         serveDetected = false
@@ -107,4 +105,8 @@ class JointSegmentView: UIView, AnimatedTransitioning {
 }
 protocol JointSegmentViewDelegate: AnyObject {
     func jointSegmentViewDidDetectServe(_ jointSegmentView: JointSegmentView)
+}
+
+extension Notification.Name {
+    static let serveDetected = Notification.Name("serveDetected")
 }
