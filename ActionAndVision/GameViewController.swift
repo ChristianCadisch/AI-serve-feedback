@@ -152,6 +152,7 @@ extension GameViewController: GameStateChangeObserver {
             print("Serve detected state is ooooon")
             //continueButton.isHidden = false
             
+            
         case is GameManager.ThrowCompletedState:
             print("ThrowCompletedState")
              playerStats.adjustMetrics(score: lastThrowMetrics.score, speed: lastThrowMetrics.releaseSpeed,

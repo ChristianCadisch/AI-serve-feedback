@@ -25,13 +25,9 @@ class RootViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
                 self.cameraViewController.pauseVideoPlayback()
             }
-        
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.cameraViewController.resumeVideoPlayback()
-            }
-        
+        //DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+               // self.cameraViewController.resumeVideoPlayback()
+          //  }
     }
     
     
@@ -103,53 +99,57 @@ class RootViewController: UIViewController {
 
 // MARK: - Handle states that require view controller transitions
 
-// This is where the overlay controllers management happens.
 extension RootViewController: GameStateChangeObserver {
     func gameManagerDidEnter(state: GameManager.State, from previousState: GameManager.State?) {
-        // Create an overlay view controller based on the game state
-        let controllerToPresent: UIViewController
+        var controllerToPresent: UIViewController? // Declare as optional to handle cases where no controller needs to be presented.
         switch state {
-        //case is GameManager.DetectingBoardState:
-        //    controllerToPresent = SetupViewController()
         case is GameManager.DetectingPlayerState:
-            controllerToPresent = GameViewController()
+            controllerToPresent = GameViewController()  // Assuming direct instantiation works here.
+        case is GameManager.ServeDetectedState:
+            print("ServeFeedbackState entered, going through the transition")
+            //controllerToPresent = SummaryViewController()
+            controllerToPresent = FeedbackViewController()
         case is GameManager.ShowSummaryState:
-            controllerToPresent = SummaryViewController()
+            controllerToPresent = SummaryViewController() // Assuming direct instantiation works here.
         default:
-            //The new state does not require new view controller, so just return.
+            controllerToPresent = nil  // Explicitly handle the default case by setting to nil.
+        }
+
+        guard let viewControllerToPresent = controllerToPresent else {
+            // No controller to present, so return immediately.
             return
         }
-        
+
+        // Proceed with presenting the view controller.
         // Remove existing overlay controller (if any) from game manager listeners
         if let currentListener = overlayViewController as? GameStateChangeObserverViewController {
             currentListener.stopObservingStateChanges()
         }
         
-        presentOverlayViewController(controllerToPresent) {
-            //Adjust safe area insets on overlay controller to match actual video outpput area.
+        presentOverlayViewController(viewControllerToPresent) {
+            // Additional setup if needed post presentation.
             if let cameraVC = self.cameraViewController {
                 let viewRect = cameraVC.view.frame
                 let videoRect = cameraVC.viewRectForVisionRect(CGRect(x: 0, y: 0, width: 1, height: 1))
-                let insets = controllerToPresent.view.safeAreaInsets
+                let insets = viewControllerToPresent.view.safeAreaInsets
                 let additionalInsets = UIEdgeInsets(
-                        top: videoRect.minY - viewRect.minY - insets.top,
-                        left: videoRect.minX - viewRect.minX - insets.left,
-                        bottom: viewRect.maxY - videoRect.maxY - insets.bottom,
-                        right: viewRect.maxX - videoRect.maxX - insets.right)
-                controllerToPresent.additionalSafeAreaInsets = additionalInsets
+                    top: videoRect.minY - viewRect.minY - insets.top,
+                    left: videoRect.minX - viewRect.minX - insets.left,
+                    bottom: viewRect.maxY - videoRect.maxY - insets.bottom,
+                    right: viewRect.maxX - videoRect.maxX - insets.right)
+                viewControllerToPresent.additionalSafeAreaInsets = additionalInsets
             }
 
-            // If new overlay controller conforms to GameManagerListener, add it to the listeners.
-            if let gameManagerListener = controllerToPresent as? GameStateChangeObserverViewController {
+            // If the new overlay controller conforms to GameStateChangeObserverViewController, add it to the listeners.
+            if let gameManagerListener = viewControllerToPresent as? GameStateChangeObserverViewController {
                 gameManagerListener.startObservingStateChanges()
             }
             
-            // If new overlay controller conforms to CameraViewControllerOutputDelegate
-            // set it as a CameraViewController's delegate, so it can process the frames
-            // that are coming from the live camera preview or being read from pre-recorded video file.
-            if let outputDelegate = controllerToPresent as? CameraViewControllerOutputDelegate {
+            // If the new overlay controller conforms to CameraViewControllerOutputDelegate, set it as the camera's delegate.
+            if let outputDelegate = viewControllerToPresent as? CameraViewControllerOutputDelegate {
                 self.cameraViewController.outputDelegate = outputDelegate
             }
         }
     }
 }
+
