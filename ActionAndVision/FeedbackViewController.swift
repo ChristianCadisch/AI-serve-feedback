@@ -13,7 +13,6 @@ class FeedbackViewController: UIViewController {
     
     private let gameManager = GameManager.shared
 
-    @IBOutlet weak var bütön: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.giveFeedback()
@@ -44,7 +43,7 @@ class FeedbackViewController: UIViewController {
     }
     
     private func giveFeedback() {
-        print("Feedback to be implemented")
+        //print("Feedback to be implemented")
     }
     
     @IBAction func playButtonPressed(_ sender: Any) {
@@ -53,7 +52,7 @@ class FeedbackViewController: UIViewController {
         if let rootViewController = self.parent as? RootViewController {
                     rootViewController.cameraViewController.resumeVideoPlayback()
                 }
-        //gameManager.stateMachine.enter(GameManager.SetupCameraState.self)
+        gameManager.stateMachine.enter(GameManager.DetectingPlayerState.self)
 
 
          
