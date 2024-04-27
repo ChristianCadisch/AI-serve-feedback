@@ -20,16 +20,6 @@ class RootViewController: UIViewController {
     private var overlayViewController: UIViewController!
     private let gameManager = GameManager.shared
     
-    @objc private func handleServeNotification() {
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
-                self.cameraViewController.pauseVideoPlayback()
-            }
-        //DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-               // self.cameraViewController.resumeVideoPlayback()
-          //  }
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +43,6 @@ class RootViewController: UIViewController {
         startObservingStateChanges()
         // Make sure close button stays in front of other views.
         view.bringSubviewToFront(closeButton)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleServeNotification), name: .serveDetected, object: nil)
 
     }
     
@@ -104,11 +93,22 @@ extension RootViewController: GameStateChangeObserver {
         var controllerToPresent: UIViewController? // Declare as optional to handle cases where no controller needs to be presented.
         switch state {
         case is GameManager.DetectingPlayerState:
-            controllerToPresent = GameViewController()  // Assuming direct instantiation works here.
+            controllerToPresent = GameViewController()
+            
         case is GameManager.ServeDetectedState:
             print("ServeFeedbackState entered, going through the transition")
-            //controllerToPresent = SummaryViewController()
-            controllerToPresent = FeedbackViewController()
+            //DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    self.cameraViewController.pauseVideoPlayback()
+                }
+        case is GameManager.ServeDetectedContinueState:
+            print("continued tracking state entered")
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.cameraViewController.resumeVideoPlayback()
+            }
+            
+        
+            //controllerToPresent = FeedbackViewController()
         case is GameManager.ShowSummaryState:
             controllerToPresent = SummaryViewController() // Assuming direct instantiation works here.
         default:

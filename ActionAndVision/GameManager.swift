@@ -54,7 +54,7 @@ class GameManager {
     class ServeDetectedState: State {
     }
     
-    class ServeFeedbackState: State {
+    class ServeDetectedContinueState: State {
 
     }
 
@@ -84,7 +84,8 @@ class GameManager {
             DetectedPlayerState([TrackThrowsState.self]),
             TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self, ServeDetectedState.self]),
             ThrowCompletedState([ShowSummaryState.self, TrackThrowsState.self]),
-            ServeDetectedState([TrackThrowsState.self, ShowSummaryState.self]),
+            ServeDetectedState([ServeDetectedContinueState.self, ShowSummaryState.self]),
+            ServeDetectedContinueState([ServeDetectedState.self]),
             ShowSummaryState([DetectingPlayerState.self])
         ]
         // Allow transitions to Inactive from any state except itself

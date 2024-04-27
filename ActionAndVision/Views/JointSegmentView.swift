@@ -9,6 +9,9 @@ import UIKit
 import Vision
 
 class JointSegmentView: UIView, AnimatedTransitioning {
+    
+    private let gameManager = GameManager.shared
+    
     var joints: [VNHumanBodyPoseObservation.JointName: CGPoint] = [:] {
         didSet {
             updatePathLayer()
@@ -18,7 +21,7 @@ class JointSegmentView: UIView, AnimatedTransitioning {
     private let rightWristJointName = VNHumanBodyPoseObservation.JointName.rightWrist
     private let rightShoulderJointName = VNHumanBodyPoseObservation.JointName.rightShoulder
     private var serveDetected = false
-    weak var delegate: JointSegmentViewDelegate?
+    //weak var delegate: JointSegmentViewDelegate?
 
 
     private let jointRadius: CGFloat = 3.0
@@ -90,8 +93,9 @@ class JointSegmentView: UIView, AnimatedTransitioning {
                         if !serveDetected {
                             print("Tennis serve detected!")
                             serveDetected = true
-                            delegate?.jointSegmentViewDidDetectServe(self)
-                            NotificationCenter.default.post(name: .serveDetected, object: nil)
+                            //delegate?.jointSegmentViewDidDetectServe(self)
+                            //NotificationCenter.default.post(name: .serveDetected, object: nil)
+                            self.gameManager.stateMachine.enter(GameManager.ServeDetectedState.self)
                         }
                     } else {
                         serveDetected = false
@@ -103,10 +107,14 @@ class JointSegmentView: UIView, AnimatedTransitioning {
     
     
 }
+
+/*
 protocol JointSegmentViewDelegate: AnyObject {
     func jointSegmentViewDidDetectServe(_ jointSegmentView: JointSegmentView)
 }
-
+*/
+/*
 extension Notification.Name {
     static let serveDetected = Notification.Name("serveDetected")
 }
+*/

@@ -26,8 +26,10 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     private var showSummaryGesture: UITapGestureRecognizer!
     private let bodyPoseDetectionMinConfidence: VNConfidence = 0.6
     private let bodyPoseRecognizedPointMinConfidence: VNConfidence = 0.1
+    
+    private let playButton = UIButton(type: .system)
 
-    //@IBOutlet weak var continueButton: UIButton!
+    weak var delegate: GameViewControllerDelegate?
     
     //Variables - KPIs
     var lastThrowMetrics: ThrowMetrics {
@@ -51,11 +53,39 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func viewDidLoad() {
         super.viewDidLoad()
         setUIElements()
-        jointSegmentView.delegate = self
         showSummaryGesture = UITapGestureRecognizer(target: self, action: #selector(handleShowSummaryGesture(_:)))
         showSummaryGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(showSummaryGesture)
-        //continueButton.isHidden = true
+        
+        
+        // Create the button
+        //let playButton = UIButton(type: .system)
+        // Set the title to a unicode play symbol
+        playButton.setTitle("▶️", for: .normal)
+        playButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        
+        // Set the action for the button
+        playButton.addTarget(self, action: #selector(playButtonPressed(_:)), for: .touchUpInside)
+
+        // Set the frame of the button, aligning it to the right end of the screen
+        let buttonWidth: CGFloat = 60
+        let buttonHeight: CGFloat = 60
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        playButton.frame = CGRect(x: screenWidth - buttonWidth - 20, // 20 points margin from the right
+                                  y: screenHeight/2, // 20 points margin from the bottom
+                                  width: buttonWidth,
+                                  height: buttonHeight)
+
+        // Add the button to the view
+        view.addSubview(playButton)
+        playButton.isHidden = true
+    }
+    
+    @IBAction func playButtonPressed(_ sender: Any) {
+        print("Continue Video button pressed")
+        playButton.isHidden = true
+        self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
     }
 
     
@@ -125,14 +155,9 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         }
         return box
     }
-    
-    
-
-    
-    
-    
-    
 }
+
+
 
 extension GameViewController: GameStateChangeObserver {
     func gameManagerDidEnter(state: GameManager.State, from previousState: GameManager.State?) {
@@ -147,11 +172,11 @@ extension GameViewController: GameStateChangeObserver {
                 self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
             }
         case is GameManager.TrackThrowsState:
-            print("letss goooo")
+            print("track")
         case is GameManager.ServeDetectedState:
             print("Serve detected state is ooooon")
-            //continueButton.isHidden = false
-            
+            self.playButton.isHidden = false
+            //self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
             
         case is GameManager.ThrowCompletedState:
             print("ThrowCompletedState")
@@ -220,11 +245,15 @@ extension GameViewController {
 }
 
 
-extension GameViewController: JointSegmentViewDelegate {
-    func jointSegmentViewDidDetectServe(_ jointSegmentView: JointSegmentView) {
-       
-        playerStats.hits += 1
-        scoreLabel.text = "Hits: \(playerStats.hits)"
-        self.gameManager.stateMachine.enter(GameManager.ServeDetectedState.self)
+protocol GameViewControllerDelegate: AnyObject {
+    func pauseVideoPlayback()
+    func resumeVideoPlayback()
+}
+extension RootViewController: GameViewControllerDelegate {
+    func pauseVideoPlayback() {
+        self.cameraViewController.pauseVideoPlayback()
+    }
+    func resumeVideoPlayback() {
+        self.cameraViewController.resumeVideoPlayback()
     }
 }
