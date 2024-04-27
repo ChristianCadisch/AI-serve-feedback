@@ -52,10 +52,8 @@ class FeedbackViewController: UIViewController {
         if let rootViewController = self.parent as? RootViewController {
                     rootViewController.cameraViewController.resumeVideoPlayback()
                 }
-        gameManager.stateMachine.enter(GameManager.DetectingPlayerState.self)
+        gameManager.stateMachine.enter(GameManager.TrackServeState.self)
 
-
-         
     }
 
 }

@@ -31,10 +31,10 @@ class GameManager {
         }
     }
     
-    class InactiveState: State {
+    class InactiveState: State { // initial state
     }
     
-    class SetupCameraState: State {
+    class SetupCameraState: State { // get the video running
     }
 
 
@@ -44,10 +44,7 @@ class GameManager {
     class DetectedPlayerState: State {
     }
 
-    class TrackThrowsState: State {
-    }
-    
-    class ThrowCompletedState: State {
+    class TrackServeState: State {
     }
     
     
@@ -66,12 +63,9 @@ class GameManager {
     fileprivate var activeObservers = [UIViewController: NSObjectProtocol]()
     
     let stateMachine: GKStateMachine
-    //var boardRegion = CGRect.null
-    //var holeRegion = CGRect.null
     var recordedVideoSource: AVAsset?
     var playerStats = PlayerStats()
     var lastThrowMetrics = ThrowMetrics()
-    //var pointToMeterMultiplier = Double.nan
     var previewImage = UIImage()
     
     static var shared = GameManager()
@@ -81,10 +75,9 @@ class GameManager {
             InactiveState([SetupCameraState.self]),
             SetupCameraState([DetectingPlayerState.self]),
             DetectingPlayerState([DetectedPlayerState.self]),
-            DetectedPlayerState([TrackThrowsState.self]),
-            TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self, ServeDetectedState.self]),
-            ThrowCompletedState([ShowSummaryState.self, TrackThrowsState.self]),
-            ServeDetectedState([ServeDetectedContinueState.self, ShowSummaryState.self]),
+            DetectedPlayerState([TrackServeState.self]),
+            TrackServeState([ShowSummaryState.self, ServeDetectedState.self]),
+            ServeDetectedState([ServeDetectedContinueState.self, TrackServeState.self, ShowSummaryState.self]),
             ServeDetectedContinueState([ServeDetectedState.self]),
             ShowSummaryState([DetectingPlayerState.self])
         ]

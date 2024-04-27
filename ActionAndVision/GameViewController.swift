@@ -23,7 +23,6 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     private let playerBoundingBox = BoundingBoxView()
     private let jointSegmentView = JointSegmentView()
     private var noObservationFrameCount = 0
-    private var showSummaryGesture: UITapGestureRecognizer!
     private let bodyPoseDetectionMinConfidence: VNConfidence = 0.6
     private let bodyPoseRecognizedPointMinConfidence: VNConfidence = 0.1
     
@@ -53,14 +52,9 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func viewDidLoad() {
         super.viewDidLoad()
         setUIElements()
-        showSummaryGesture = UITapGestureRecognizer(target: self, action: #selector(handleShowSummaryGesture(_:)))
-        showSummaryGesture.numberOfTapsRequired = 2
-        view.addGestureRecognizer(showSummaryGesture)
         
         
         // Create the button
-        //let playButton = UIButton(type: .system)
-        // Set the title to a unicode play symbol
         playButton.setTitle("▶️", for: .normal)
         playButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         
@@ -147,9 +141,9 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         DispatchQueue.main.async {
             self.jointSegmentView.joints = joints
         }
-        // Store the body pose observation in playerStats when the game is in TrackThrowsState.
+        // Store the body pose observation in playerStats when the game is in TrackServeState.
         // We will use these observations for action classification once the throw is complete.
-        if gameManager.stateMachine.currentState is GameManager.TrackThrowsState {
+        if gameManager.stateMachine.currentState is GameManager.TrackServeState {
             playerStats.storeObservation(observation)
 
         }
@@ -169,30 +163,13 @@ extension GameViewController: GameStateChangeObserver {
             //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             gameStatusLabel.text = "Go"
             gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
-                self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
+                self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
             }
-        case is GameManager.TrackThrowsState:
+        case is GameManager.TrackServeState:
             print("track")
         case is GameManager.ServeDetectedState:
             print("Serve detected state is ooooon")
             self.playButton.isHidden = false
-            //self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
-            
-        case is GameManager.ThrowCompletedState:
-            print("ThrowCompletedState")
-             playerStats.adjustMetrics(score: lastThrowMetrics.score, speed: lastThrowMetrics.releaseSpeed,
-                                      releaseAngle: lastThrowMetrics.releaseAngle, throwType: lastThrowMetrics.throwType)
-            playerStats.resetObservations()
-            self.updateKPILabels()
-            
-            gameStatusLabel.text = lastThrowMetrics.score.rawValue > 0 ? "+\(lastThrowMetrics.score.rawValue)" : ""
-            gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
-                if self.playerStats.throwCount == GameConstants.maxThrows {
-                    self.gameManager.stateMachine.enter(GameManager.ShowSummaryState.self)
-                } else {
-                    self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
-                }
-            }
         default:
             break
         }
@@ -202,7 +179,7 @@ extension GameViewController: GameStateChangeObserver {
 extension GameViewController: CameraViewControllerOutputDelegate {
     func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation) {
         let visionHandler = VNImageRequestHandler(cmSampleBuffer: buffer, orientation: orientation, options: [:])
-        if gameManager.stateMachine.currentState is GameManager.TrackThrowsState {
+        if gameManager.stateMachine.currentState is GameManager.TrackServeState {
             DispatchQueue.main.async {
                 // Get the frame of rendered view
                 let normalizedFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
@@ -223,7 +200,6 @@ extension GameViewController: CameraViewControllerOutputDelegate {
                     self.updateBoundingBox(boxView, withRect: viewRect)
                     if !self.playerDetected && !boxView.isHidden {
                         self.gameStatusLabel.alpha = 0
-                        //self.resetTrajectoryRegions()
                         self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
                     }
                 }
@@ -235,14 +211,6 @@ extension GameViewController: CameraViewControllerOutputDelegate {
     }
 }
 
-extension GameViewController {
-    @objc
-    func handleShowSummaryGesture(_ gesture: UITapGestureRecognizer) {
-        if gesture.state == .ended {
-            self.gameManager.stateMachine.enter(GameManager.ShowSummaryState.self)
-        }
-    }
-}
 
 
 protocol GameViewControllerDelegate: AnyObject {
