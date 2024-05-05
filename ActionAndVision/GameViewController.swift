@@ -29,6 +29,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     private let playButton = UIButton(type: .system)
     private let compareButton = UIButton(type: .system)
     private var proImageView: UIImageView?
+    private let nextPlayerButton = UIButton(type: .system)
 
 
     weak var delegate: GameViewControllerDelegate?
@@ -91,7 +92,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         let compareButtonWidth: CGFloat = 150
         let compareButtonHeight: CGFloat = 50
         let safeAreaInsets = view.safeAreaInsets
-        let buttonX = view.bounds.width - compareButtonWidth - safeAreaInsets.right - 20 // 20 points margin
+        let buttonX = view.bounds.width - compareButtonWidth + 140 // weird stuff here. TBD
         let buttonY = view.bounds.height - compareButtonHeight - safeAreaInsets.bottom - 70 // 20 points margin from the bottom
 
         compareButton.frame = CGRect(x: buttonX,
@@ -104,8 +105,36 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         view.addSubview(compareButton)
         view.bringSubviewToFront(compareButton)
         compareButton.isHidden = true
+        
+        setupNextPlayerButton()
+
     }
-    
+    // Add button setup in the `viewDidLoad` method
+    private func setupNextPlayerButton() {
+        nextPlayerButton.setTitle("Next", for: .normal)
+        nextPlayerButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        nextPlayerButton.frame = CGRect(x: 20, // 20 points from the left margin
+                                        y: UIScreen.main.bounds.height - 100, // Adjusted to bottom
+                                        width: 100,
+                                        height: 50)
+        nextPlayerButton.addTarget(self, action: #selector(nextPlayerButtonPressed(_:)), for: .touchUpInside)
+        view.addSubview(nextPlayerButton)
+        view.bringSubviewToFront(nextPlayerButton)
+    }
+    // Implement the action for the button
+    @objc func nextPlayerButtonPressed(_ sender: UIButton) {
+        // Assuming you have an array of player images or an image index to cycle through
+        let playerImages = ["Federer", "Alcaraz"] // Example player images
+        if let currentImage = proImageView?.image,
+           let currentIndex = playerImages.firstIndex(where: { UIImage(named: $0) == currentImage }),
+           currentIndex + 1 < playerImages.count {
+            proImageView?.image = UIImage(named: playerImages[currentIndex + 1])
+        } else {
+            proImageView?.image = UIImage(named: playerImages.first!)
+        }
+        layoutImageView() // Re-layout if needed
+    }
+
     @IBAction func playButtonPressed(_ sender: Any) {
         print("GVC Continue Video button pressed")
         playButton.isHidden = true
