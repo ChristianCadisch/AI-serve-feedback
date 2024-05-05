@@ -11,7 +11,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GameViewController" customModule="ActionAndVision" customModuleProvider="target">
             <connections>
                 <outlet property="gameStatusLabel" destination="xSn-62-KuW" id="TOH-fN-32O"/>
-                <outlet property="scoreLabel" destination="SxD-3J-hkk" id="g6s-au-Hxg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -38,32 +37,12 @@
                     </attributedString>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SxD-3J-hkk" customClass="OverlayLabel" customModule="ActionAndVision" customModuleProvider="target">
-                    <rect key="frame" x="181.5" y="-8" width="304" height="40"/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="304" id="1xe-1o-Gjf"/>
-                        <constraint firstAttribute="height" constant="40" id="YBN-FF-yj9"/>
-                    </constraints>
-                    <attributedString key="attributedText">
-                        <fragment content="Label">
-                            <attributes>
-                                <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <font key="NSFont" metaFont="system" size="17"/>
-                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                            </attributes>
-                        </fragment>
-                    </attributedString>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="SxD-3J-hkk" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="S0p-9w-RX4"/>
                 <constraint firstItem="xSn-62-KuW" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" id="hpa-yl-SK2"/>
                 <constraint firstItem="xSn-62-KuW" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="vJI-ZI-E8l"/>
-                <constraint firstItem="SxD-3J-hkk" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="-8" id="ybb-RX-q8Q"/>
             </constraints>
             <point key="canvasLocation" x="138.61607142857142" y="111.59420289855073"/>
         </view>

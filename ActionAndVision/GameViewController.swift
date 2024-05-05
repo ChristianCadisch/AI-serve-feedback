@@ -14,7 +14,7 @@ import AVFoundation
 import Vision
 
 class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-    @IBOutlet weak var scoreLabel: UILabel!
+    //@IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet var beanBags: [UIImageView]!
     @IBOutlet weak var gameStatusLabel: OverlayLabel!
     private let gameManager = GameManager.shared
@@ -27,6 +27,9 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     private let bodyPoseRecognizedPointMinConfidence: VNConfidence = 0.1
     
     private let playButton = UIButton(type: .system)
+    private let compareButton = UIButton(type: .system)
+    private var proImageView: UIImageView?
+
 
     weak var delegate: GameViewControllerDelegate?
     
@@ -54,7 +57,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         setUIElements()
         
         
-        // Create the button
+        // Create play button
         playButton.setTitle("▶️", for: .normal)
         playButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         
@@ -66,14 +69,41 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         let buttonHeight: CGFloat = 60
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
-        playButton.frame = CGRect(x: screenWidth - buttonWidth - 20, // 20 points margin from the right
+        playButton.frame = CGRect(x: screenWidth - buttonWidth - 70, // 20 points margin from the right
                                   y: screenHeight/2, // 20 points margin from the bottom
                                   width: buttonWidth,
                                   height: buttonHeight)
 
         // Add the button to the view
         view.addSubview(playButton)
+        view.bringSubviewToFront(playButton)
         playButton.isHidden = true
+        
+        
+        // Create compare button
+        compareButton.setTitle("Compare", for: .normal)
+        compareButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        
+        // Set the action for the button
+        compareButton.addTarget(self, action: #selector(compareButtonPressed(_:)), for: .touchUpInside)
+
+        // Set the frame of the button, aligning it to the right end of the screen
+        let compareButtonWidth: CGFloat = 150
+        let compareButtonHeight: CGFloat = 50
+        let safeAreaInsets = view.safeAreaInsets
+        let buttonX = view.bounds.width - compareButtonWidth - safeAreaInsets.right - 20 // 20 points margin
+        let buttonY = view.bounds.height - compareButtonHeight - safeAreaInsets.bottom - 70 // 20 points margin from the bottom
+
+        compareButton.frame = CGRect(x: buttonX,
+                                     y: buttonY,
+                                     width: compareButtonWidth,
+                                     height: compareButtonHeight)
+
+
+        // Add the button to the view
+        view.addSubview(compareButton)
+        view.bringSubviewToFront(compareButton)
+        compareButton.isHidden = true
     }
     
     @IBAction func playButtonPressed(_ sender: Any) {
@@ -81,6 +111,47 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         playButton.isHidden = true
         self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
     }
+    
+    @IBAction func compareButtonPressed(_ sender: Any) {
+        print("Compare button pressed")
+        
+        // Create the image view if it does not already exist
+        if proImageView == nil {
+            proImageView = UIImageView(frame: .zero)
+            proImageView?.contentMode = .scaleAspectFit
+            view.addSubview(proImageView!)
+        }
+        
+        // Load the image from assets
+        proImageView?.image = UIImage(named: "Federer")
+        
+        
+        // Layout the image view on the right half of the screen
+        layoutImageView()
+    }
+
+    private func layoutImageView() {
+        guard let imageView = proImageView else { return }
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Remove any old constraints that might be set
+        NSLayoutConstraint.deactivate(imageView.constraints)
+        
+        // Activate new constraints
+        NSLayoutConstraint.activate([
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), // Smaller margin for top
+            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10), // Smaller margin for bottom
+            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8) // Increased width to 80% of the parent view
+        ])
+        
+        view.layoutIfNeeded() // Force the layout to update
+    }
+
+
+
+
+
 
     
     override func viewDidAppear(_ animated: Bool) {
@@ -92,13 +163,14 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         super.viewDidDisappear(animated)
     }
 
+    /*
     func getScoreLabelAttributedStringForScore(_ score: Int) -> NSAttributedString {
         let totalScore = NSMutableAttributedString(string: "Total Score ", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)])
         totalScore.append(NSAttributedString(string: "\(score)", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)]))
         totalScore.append(NSAttributedString(string: "/40", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)]))
         return totalScore
     }
-
+*/
     func setUIElements() {
         
         playerBoundingBox.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -108,12 +180,12 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         view.addSubview(playerBoundingBox)
         view.addSubview(jointSegmentView)
         gameStatusLabel.text = "Waiting for player"
-        scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
+        //scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
     }
 
 
     func updateKPILabels() {
-        scoreLabel.text = "Hits: \(playerStats.hits)"
+        //scoreLabel.text = "Hits: \(playerStats.hits)"
     }
 
     func updateBoundingBox(_ boundingBox: BoundingBoxView, withRect rect: CGRect?) {
@@ -170,6 +242,7 @@ extension GameViewController: GameStateChangeObserver {
         case is GameManager.ServeDetectedState:
             print("Serve detected state is ooooon")
             self.playButton.isHidden = false
+            self.compareButton.isHidden = false
         default:
             break
         }

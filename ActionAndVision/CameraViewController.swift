@@ -156,15 +156,20 @@ class CameraViewController: UIViewController {
 
     func setupVideoOutputView(_ videoOutputView: UIView) {
         videoOutputView.translatesAutoresizingMaskIntoConstraints = false
-        videoOutputView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        //videoOutputView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         view.addSubview(videoOutputView)
+        
+        let width: CGFloat = 300
+        let height: CGFloat = 200
+        
         NSLayoutConstraint.activate([
-            videoOutputView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            videoOutputView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            videoOutputView.topAnchor.constraint(equalTo: view.topAnchor),
-            videoOutputView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            videoOutputView.widthAnchor.constraint(equalToConstant: width),
+            videoOutputView.heightAnchor.constraint(equalToConstant: height),
+            videoOutputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40), // 40 points from the left edge
+            videoOutputView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50) // Centers vertically in the superview
         ])
     }
+
     
     func startReadingAsset(_ asset: AVAsset) {
         videoRenderView = VideoRenderView(frame: view.bounds)

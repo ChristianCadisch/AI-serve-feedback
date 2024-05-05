@@ -30,15 +30,38 @@ class RootViewController: UIViewController {
         view.addSubview(cameraViewController.view)
         cameraViewController.endAppearanceTransition()
         cameraViewController.didMove(toParent: self)
+        
+        
+        
+        
+        overlayParentView = UIView(frame: view.bounds)
+        overlayParentView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(overlayParentView)
         overlayParentView = UIView(frame: view.bounds)
         overlayParentView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(overlayParentView)
         NSLayoutConstraint.activate([
-            overlayParentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            overlayParentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40), // 40 points from the left edge
             overlayParentView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            overlayParentView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            overlayParentView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             overlayParentView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         ])
+
+        
+        
+        /*
+
+        
+        let width: CGFloat = 300
+        let height: CGFloat = 200
+        
+        NSLayoutConstraint.activate([
+            overlayParentView.widthAnchor.constraint(equalToConstant: width),
+            overlayParentView.heightAnchor.constraint(equalToConstant: height),
+            overlayParentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40), // 40 points from the left edge
+            overlayParentView.centerYAnchor.constraint(equalTo: view.centerYAnchor) // Centers vertically in the superview
+        ])
+        */
         
         startObservingStateChanges()
         // Make sure close button stays in front of other views.

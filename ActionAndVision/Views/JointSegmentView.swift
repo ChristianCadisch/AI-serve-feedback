@@ -108,13 +108,3 @@ class JointSegmentView: UIView, AnimatedTransitioning {
     
 }
 
-/*
-protocol JointSegmentViewDelegate: AnyObject {
-    func jointSegmentViewDidDetectServe(_ jointSegmentView: JointSegmentView)
-}
-*/
-/*
-extension Notification.Name {
-    static let serveDetected = Notification.Name("serveDetected")
-}
-*/
