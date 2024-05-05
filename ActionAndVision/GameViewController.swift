@@ -77,7 +77,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     }
     
     @IBAction func playButtonPressed(_ sender: Any) {
-        print("Continue Video button pressed")
+        print("GVC Continue Video button pressed")
         playButton.isHidden = true
         self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
     }
