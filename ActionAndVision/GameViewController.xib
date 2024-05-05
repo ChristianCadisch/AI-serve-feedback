@@ -10,7 +10,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GameViewController" customModule="ActionAndVision" customModuleProvider="target">
             <connections>
-                <outlet property="gameStatusLabel" destination="xSn-62-KuW" id="TOH-fN-32O"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,32 +17,8 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <subviews>
-                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="xSn-62-KuW" customClass="OverlayLabel" customModule="ActionAndVision" customModuleProvider="target">
-                    <rect key="frame" x="83.5" y="127.5" width="500" height="120"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="500" id="CL4-a9-9Ab"/>
-                        <constraint firstAttribute="height" constant="120" id="yIM-ay-nwV"/>
-                    </constraints>
-                    <attributedString key="attributedText">
-                        <fragment content="Go">
-                            <attributes>
-                                <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <font key="NSFont" metaFont="system" size="120"/>
-                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                            </attributes>
-                        </fragment>
-                    </attributedString>
-                    <nil key="highlightedColor"/>
-                </label>
-            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-            <constraints>
-                <constraint firstItem="xSn-62-KuW" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" id="hpa-yl-SK2"/>
-                <constraint firstItem="xSn-62-KuW" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="vJI-ZI-E8l"/>
-            </constraints>
             <point key="canvasLocation" x="138.61607142857142" y="111.59420289855073"/>
         </view>
     </objects>

@@ -129,7 +129,8 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         // Layout the image view on the right half of the screen
         layoutImageView()
     }
-
+    
+    // for the comparison image
     private func layoutImageView() {
         guard let imageView = proImageView else { return }
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -156,7 +157,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        gameStatusLabel.perform(transition: .fadeIn, duration: 0.25)
+        //gameStatusLabel.perform(transition: .fadeIn, duration: 0.25)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -179,7 +180,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
 
         view.addSubview(playerBoundingBox)
         view.addSubview(jointSegmentView)
-        gameStatusLabel.text = "Waiting for player"
+        //gameStatusLabel.text = "Waiting for player"
         //scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
     }
 
@@ -233,10 +234,13 @@ extension GameViewController: GameStateChangeObserver {
             playerStats.reset()
             playerBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
+            
+            self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
+            /*
             gameStatusLabel.text = "Go"
             gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
                 self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
-            }
+            }*/
         case is GameManager.TrackServeState:
             print("track")
         case is GameManager.ServeDetectedState:
@@ -272,7 +276,7 @@ extension GameViewController: CameraViewControllerOutputDelegate {
                     let viewRect = controller.viewRectForVisionRect(box).insetBy(dx: inset, dy: inset)
                     self.updateBoundingBox(boxView, withRect: viewRect)
                     if !self.playerDetected && !boxView.isHidden {
-                        self.gameStatusLabel.alpha = 0
+                        //self.gameStatusLabel.alpha = 0
                         self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
                     }
                 }
