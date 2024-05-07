@@ -31,17 +31,12 @@ class GameManager {
         }
     }
     
-    class InactiveState: State {
+    class InactiveState: State { // initial state
     }
     
-    class SetupCameraState: State {
+    class SetupCameraState: State { // get the video running
     }
-    
-    class DetectingBoardState: State {
-    }
-    
-    class DetectedBoardState: State {
-    }
+
 
     class DetectingPlayerState: State {
     }
@@ -49,11 +44,18 @@ class GameManager {
     class DetectedPlayerState: State {
     }
 
-    class TrackThrowsState: State {
+    class TrackServeState: State {
     }
     
-    class ThrowCompletedState: State {
+    
+    class ServeDetectedState: State {
     }
+    
+    class ServeDetectedContinueState: State {
+
+    }
+
+    
 
     class ShowSummaryState: State {
     }
@@ -61,43 +63,36 @@ class GameManager {
     fileprivate var activeObservers = [UIViewController: NSObjectProtocol]()
     
     let stateMachine: GKStateMachine
-    var boardRegion = CGRect.null
-    var holeRegion = CGRect.null
     var recordedVideoSource: AVAsset?
     var playerStats = PlayerStats()
     var lastThrowMetrics = ThrowMetrics()
-    var pointToMeterMultiplier = Double.nan
     var previewImage = UIImage()
     
     static var shared = GameManager()
     
     private init() {
-        // Possible states with valid next states.
         let states = [
             InactiveState([SetupCameraState.self]),
-            SetupCameraState([DetectingBoardState.self]),
-            DetectingBoardState([DetectedBoardState.self]),
-            DetectedBoardState([DetectingPlayerState.self]),
+            SetupCameraState([DetectingPlayerState.self]),
             DetectingPlayerState([DetectedPlayerState.self]),
-            DetectedPlayerState([TrackThrowsState.self]),
-            TrackThrowsState([ThrowCompletedState.self, ShowSummaryState.self]),
-            ThrowCompletedState([ShowSummaryState.self, TrackThrowsState.self]),
+            DetectedPlayerState([TrackServeState.self]),
+            TrackServeState([ShowSummaryState.self, ServeDetectedState.self]),
+            ServeDetectedState([ServeDetectedContinueState.self, TrackServeState.self, ShowSummaryState.self]),
+            ServeDetectedContinueState([ServeDetectedState.self]),
             ShowSummaryState([DetectingPlayerState.self])
         ]
-        // Any state besides Inactive can be returned to Inactive.
+        // Allow transitions to Inactive from any state except itself
         for state in states where !(state is InactiveState) {
             state.addValidNextState(InactiveState.self)
         }
-        // Create state machine.
         stateMachine = GKStateMachine(states: states)
     }
+
     
     func reset() {
         // Reset all stored values
-        boardRegion = .null
         recordedVideoSource = nil
         playerStats = PlayerStats()
-        pointToMeterMultiplier = .nan
         // Remove all observers and enter inactive state.
         let notificationCenter = NotificationCenter.default
         for observer in activeObservers {

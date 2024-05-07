@@ -6,7 +6,7 @@ View that displays the throw count as a progress.
 */
 
 import UIKit
-
+/*
 class ProgressView: UIView, AnimatedTransitioning {
     
     var throwCount: Int = 0 {
@@ -93,3 +93,4 @@ class ProgressView: UIView, AnimatedTransitioning {
         animateSpeedChart()
     }
 }
+*/

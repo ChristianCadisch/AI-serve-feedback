@@ -14,6 +14,15 @@ protocol CameraViewControllerOutputDelegate: class {
 
 class CameraViewController: UIViewController {
     
+    
+
+    func pauseVideoPlayback() {
+        videoRenderView?.pausePlayback()
+    }
+    func resumeVideoPlayback() {
+        videoRenderView?.player?.play()
+    }
+    
     weak var outputDelegate: CameraViewControllerOutputDelegate?
     private let videoDataOutputQueue = DispatchQueue(label: "CameraFeedDataOutput", qos: .userInitiated,
                                                      attributes: [], autoreleaseFrequency: .workItem)
@@ -147,15 +156,20 @@ class CameraViewController: UIViewController {
 
     func setupVideoOutputView(_ videoOutputView: UIView) {
         videoOutputView.translatesAutoresizingMaskIntoConstraints = false
-        videoOutputView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        //videoOutputView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         view.addSubview(videoOutputView)
+        
+        let width: CGFloat = UIScreen.main.bounds.width / 2.2
+        let height: CGFloat = UIScreen.main.bounds.height
+        
         NSLayoutConstraint.activate([
-            videoOutputView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            videoOutputView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            videoOutputView.topAnchor.constraint(equalTo: view.topAnchor),
-            videoOutputView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            videoOutputView.widthAnchor.constraint(equalToConstant: width),
+            videoOutputView.heightAnchor.constraint(equalToConstant: height),
+            videoOutputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0), // 40 points from the left edge
+            videoOutputView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0)
         ])
     }
+
     
     func startReadingAsset(_ asset: AVAsset) {
         videoRenderView = VideoRenderView(frame: view.bounds)
@@ -241,7 +255,7 @@ class CameraViewController: UIViewController {
                     let stateMachine = self.gameManager.stateMachine
                     if stateMachine.currentState is GameManager.SetupCameraState {
                         // Once we received first buffer we are ready to proceed to the next state
-                        stateMachine.enter(GameManager.DetectingBoardState.self)
+                        stateMachine.enter(GameManager.DetectingPlayerState.self)
                     }
                 }
             }
@@ -273,7 +287,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             let stateMachine = self.gameManager.stateMachine
             if stateMachine.currentState is GameManager.SetupCameraState {
                 // Once we received first buffer we are ready to proceed to the next state
-                stateMachine.enter(GameManager.DetectingBoardState.self)
+                stateMachine.enter(GameManager.DetectingPlayerState.self)
             }
         }
     }

@@ -5,7 +5,6 @@ Abstract:
 View controller responsible for the game flow.
      The game flow consists of the following tasks:
      - player detection
-     - trajectory detection
      - player action classification
      - release angle, release speed and score computation
 */
@@ -15,38 +14,26 @@ import AVFoundation
 import Vision
 
 class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-    @IBOutlet weak var scoreLabel: UILabel!
+    //@IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet var beanBags: [UIImageView]!
     @IBOutlet weak var gameStatusLabel: OverlayLabel!
-    @IBOutlet weak var throwTypeLabel: UILabel!
-    @IBOutlet weak var releaseAngleLabel: UILabel!
-    @IBOutlet weak var metricsStackView: UIStackView!
-    @IBOutlet weak var speedLabel: UILabel!
-    @IBOutlet weak var speedStackView: UIStackView!
-    @IBOutlet weak var throwTypeImage: UIImageView!
-    @IBOutlet weak var dashboardView: DashboardView!
-    @IBOutlet weak var underhandThrowView: ProgressView!
-    @IBOutlet weak var overhandThrowView: ProgressView!
-    @IBOutlet weak var underlegThrowView: ProgressView!
     private let gameManager = GameManager.shared
     private let detectPlayerRequest = VNDetectHumanBodyPoseRequest()
     private var playerDetected = false
-    private var isBagInTargetRegion = false
-    private var throwRegion = CGRect.null
-    private var targetRegion = CGRect.null
-    private let trajectoryView = TrajectoryView()
     private let playerBoundingBox = BoundingBoxView()
     private let jointSegmentView = JointSegmentView()
     private var noObservationFrameCount = 0
-    private var trajectoryInFlightPoseObservations = 0
-    private var showSummaryGesture: UITapGestureRecognizer!
-    private let trajectoryQueue = DispatchQueue(label: "com.ActionAndVision.trajectory", qos: .userInteractive)
     private let bodyPoseDetectionMinConfidence: VNConfidence = 0.6
-    private let trajectoryDetectionMinConfidence: VNConfidence = 0.9
     private let bodyPoseRecognizedPointMinConfidence: VNConfidence = 0.1
-    private lazy var detectTrajectoryRequest: VNDetectTrajectoriesRequest! =
-                        VNDetectTrajectoriesRequest(frameAnalysisSpacing: .zero, trajectoryLength: GameConstants.trajectoryLength)
+    
+    private let playButton = UIButton(type: .system)
+    private let compareButton = UIButton(type: .system)
+    private var proImageView: UIImageView?
+    private let nextPlayerButton = UIButton(type: .system)
 
+
+    weak var delegate: GameViewControllerDelegate?
+    
     //Variables - KPIs
     var lastThrowMetrics: ThrowMetrics {
         get {
@@ -69,79 +56,166 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func viewDidLoad() {
         super.viewDidLoad()
         setUIElements()
-        showSummaryGesture = UITapGestureRecognizer(target: self, action: #selector(handleShowSummaryGesture(_:)))
-        showSummaryGesture.numberOfTapsRequired = 2
-        view.addGestureRecognizer(showSummaryGesture)
+        
+        
+        // Create play button
+        playButton.setTitle("▶️", for: .normal)
+        playButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        
+        // Set the action for the button
+        playButton.addTarget(self, action: #selector(playButtonPressed(_:)), for: .touchUpInside)
+
+        // Set the frame of the button, aligning it to the right end of the screen
+        let buttonWidth: CGFloat = 60
+        let buttonHeight: CGFloat = 60
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        playButton.frame = CGRect(x: screenWidth - buttonWidth - 70, // 20 points margin from the right
+                                  y: screenHeight/2, // 20 points margin from the bottom
+                                  width: buttonWidth,
+                                  height: buttonHeight)
+
+        // Add the button to the view
+        view.addSubview(playButton)
+        view.bringSubviewToFront(playButton)
+        playButton.isHidden = true
+        
+        
+        // Create compare button
+        compareButton.setTitle("Compare", for: .normal)
+        compareButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        
+        // Set the action for the button
+        compareButton.addTarget(self, action: #selector(compareButtonPressed(_:)), for: .touchUpInside)
+
+        // Set the frame of the button, aligning it to the right end of the screen
+        let compareButtonWidth: CGFloat = 150
+        let compareButtonHeight: CGFloat = 50
+        let safeAreaInsets = view.safeAreaInsets
+        let buttonX = view.bounds.width - compareButtonWidth + 140 // weird stuff here. TBD
+        let buttonY = view.bounds.height - compareButtonHeight - safeAreaInsets.bottom - 70 // 20 points margin from the bottom
+
+        compareButton.frame = CGRect(x: buttonX,
+                                     y: buttonY,
+                                     width: compareButtonWidth,
+                                     height: compareButtonHeight)
+
+
+        // Add the button to the view
+        view.addSubview(compareButton)
+        view.bringSubviewToFront(compareButton)
+        //compareButton.isHidden = true
+        
+        setupNextPlayerButton()
+
     }
+    // Add button setup in the `viewDidLoad` method
+    private func setupNextPlayerButton() {
+        nextPlayerButton.setTitle("Next", for: .normal)
+        nextPlayerButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        nextPlayerButton.frame = CGRect(x: 20, // 20 points from the left margin
+                                        y: UIScreen.main.bounds.height - 100, // Adjusted to bottom
+                                        width: 100,
+                                        height: 50)
+        nextPlayerButton.addTarget(self, action: #selector(nextPlayerButtonPressed(_:)), for: .touchUpInside)
+        view.addSubview(nextPlayerButton)
+        view.bringSubviewToFront(nextPlayerButton)
+    }
+    // Implement the action for the button
+    @objc func nextPlayerButtonPressed(_ sender: UIButton) {
+        // Assuming you have an array of player images or an image index to cycle through
+        let playerImages = ["Federer", "Alcaraz"] // Example player images
+        if let currentImage = proImageView?.image,
+           let currentIndex = playerImages.firstIndex(where: { UIImage(named: $0) == currentImage }),
+           currentIndex + 1 < playerImages.count {
+            proImageView?.image = UIImage(named: playerImages[currentIndex + 1])
+        } else {
+            proImageView?.image = UIImage(named: playerImages.first!)
+        }
+        layoutImageView() // Re-layout if needed
+    }
+
+    @IBAction func playButtonPressed(_ sender: Any) {
+        print("GVC Continue Video button pressed")
+        playButton.isHidden = true
+        self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
+    }
+    
+    @IBAction func compareButtonPressed(_ sender: Any) {
+        print("Compare button pressed")
+        
+        // Create the image view if it does not already exist
+        if proImageView == nil {
+            proImageView = UIImageView(frame: .zero)
+            proImageView?.contentMode = .scaleAspectFit
+            view.addSubview(proImageView!)
+        }
+        
+        // Load the image from assets
+        proImageView?.image = UIImage(named: "Federer")
+        
+        
+        // Layout the image view on the right half of the screen
+        layoutImageView()
+    }
+    
+    // for the comparison image
+    private func layoutImageView() {
+        guard let imageView = proImageView else { return }
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Remove any old constraints that might be set
+        NSLayoutConstraint.deactivate(imageView.constraints)
+        
+        // Activate new constraints
+        NSLayoutConstraint.activate([
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), // Smaller margin for top
+            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10), // Smaller margin for bottom
+            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8) // Increased width to 80% of the parent view
+        ])
+        
+        view.layoutIfNeeded() // Force the layout to update
+    }
+
+
+
+
+
+
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        gameStatusLabel.perform(transition: .fadeIn, duration: 0.25)
+        //gameStatusLabel.perform(transition: .fadeIn, duration: 0.25)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        detectTrajectoryRequest = nil
     }
 
+    /*
     func getScoreLabelAttributedStringForScore(_ score: Int) -> NSAttributedString {
         let totalScore = NSMutableAttributedString(string: "Total Score ", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)])
         totalScore.append(NSAttributedString(string: "\(score)", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)]))
         totalScore.append(NSAttributedString(string: "/40", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)]))
         return totalScore
     }
-
+*/
     func setUIElements() {
-        resetKPILabels()
+        
         playerBoundingBox.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         playerBoundingBox.backgroundOpacity = 0
         playerBoundingBox.isHidden = true
+
         view.addSubview(playerBoundingBox)
         view.addSubview(jointSegmentView)
-        view.addSubview(trajectoryView)
-        gameStatusLabel.text = "Waiting for player"
-        // Set throw type counters
-        underhandThrowView.throwType = .underhand
-        overhandThrowView.throwType = .overhand
-        underlegThrowView.throwType = .underleg
-        scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
+        //gameStatusLabel.text = "Waiting for player"
+        //scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
     }
 
-    func resetKPILabels() {
-        // Reset Speed and throwType image
-        dashboardView.speed = 0
-        throwTypeImage.image = nil
-        // Hode KPI labels
-        dashboardView.isHidden = true
-        speedStackView.isHidden = true
-        metricsStackView.isHidden = true
-    }
 
     func updateKPILabels() {
-        // Show KPI labels
-        dashboardView.isHidden = false
-        speedStackView.isHidden = false
-        metricsStackView.isHidden = false
-        // Update text for KPI labels
-        speedLabel.text = "\(lastThrowMetrics.releaseSpeed)"
-        throwTypeLabel.text = lastThrowMetrics.throwType.rawValue.capitalized
-        releaseAngleLabel.text = "\(lastThrowMetrics.releaseAngle)°"
-        scoreLabel.attributedText = getScoreLabelAttributedStringForScore(gameManager.playerStats.totalScore)
-        // Update throw type counters
-        throwTypeImage.image = UIImage(named: lastThrowMetrics.throwType.rawValue)
-        switch lastThrowMetrics.throwType {
-        case .overhand:
-            overhandThrowView.incrementThrowCount()
-        case .underhand:
-            underhandThrowView.incrementThrowCount()
-        case .underleg:
-            underlegThrowView.incrementThrowCount()
-        default:
-            break
-        }
-        // Update score labels
-        let beanBagView = beanBags[playerStats.throwCount - 1]
-        beanBagView.image = UIImage(named: "Score\(lastThrowMetrics.score.rawValue)")
+        //scoreLabel.text = "Hits: \(playerStats.hits)"
     }
 
     func updateBoundingBox(_ boundingBox: BoundingBoxView, withRect rect: CGRect?) {
@@ -169,121 +243,17 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         DispatchQueue.main.async {
             self.jointSegmentView.joints = joints
         }
-        // Store the body pose observation in playerStats when the game is in TrackThrowsState.
+        // Store the body pose observation in playerStats when the game is in TrackServeState.
         // We will use these observations for action classification once the throw is complete.
-        if gameManager.stateMachine.currentState is GameManager.TrackThrowsState {
+        if gameManager.stateMachine.currentState is GameManager.TrackServeState {
             playerStats.storeObservation(observation)
-            if trajectoryView.inFlight {
-                trajectoryInFlightPoseObservations += 1
-            }
+
         }
         return box
     }
-
-    // Define regions to filter relavant trajectories for the game
-    // throwRegion: Region to the right of the player to detect start of throw
-    // targetRegion: Region around the board to determine end of throw
-    func resetTrajectoryRegions() {
-        let boardRegion = gameManager.boardRegion
-        let playerRegion = playerBoundingBox.frame
-        let throwWindowXBuffer: CGFloat = 50
-        let throwWindowYBuffer: CGFloat = 50
-        let targetWindowXBuffer: CGFloat = 50
-        let throwRegionWidth: CGFloat = 400
-        throwRegion = CGRect(x: playerRegion.maxX + throwWindowXBuffer, y: 0, width: throwRegionWidth, height: playerRegion.maxY - throwWindowYBuffer)
-        targetRegion = CGRect(x: boardRegion.minX - targetWindowXBuffer, y: 0,
-                              width: boardRegion.width + 2 * targetWindowXBuffer, height: boardRegion.maxY)
-    }
-
-    // Adjust the throwRegion based on location of the bag.
-    // Move the throwRegion to the right until we reach the target region.
-    func updateTrajectoryRegions() {
-        let trajectoryLocation = trajectoryView.fullTrajectory.currentPoint
-        let didBagCrossCenterOfThrowRegion = trajectoryLocation.x > throwRegion.origin.x + throwRegion.width / 2
-        guard !(throwRegion.contains(trajectoryLocation) && didBagCrossCenterOfThrowRegion) else {
-            return
-        }
-        // Overlap buffer window between throwRegion and targetRegion
-        let overlapWindowBuffer: CGFloat = 50
-        if targetRegion.contains(trajectoryLocation) {
-            // When bag is in target region, set the throwRegion to targetRegion.
-            throwRegion = targetRegion
-        } else if trajectoryLocation.x + throwRegion.width / 2 - overlapWindowBuffer < targetRegion.origin.x {
-            // Move the throwRegion forward to have the bag at the center.
-            throwRegion.origin.x = trajectoryLocation.x - throwRegion.width / 2
-        }
-        trajectoryView.roi = throwRegion
-    }
-    
-    func processTrajectoryObservations(_ controller: CameraViewController, _ results: [VNTrajectoryObservation]) {
-        if self.trajectoryView.inFlight && results.count < 1 {
-            // The trajectory is already in flight but VNDetectTrajectoriesRequest doesn't return any trajectory observations.
-            self.noObservationFrameCount += 1
-            if self.noObservationFrameCount > GameConstants.noObservationFrameLimit {
-                // Ending the throw as we don't see any observations in consecutive GameConstants.noObservationFrameLimit frames.
-                self.updatePlayerStats(controller)
-            }
-        } else {
-            for path in results where path.confidence > trajectoryDetectionMinConfidence {
-                // VNDetectTrajectoriesRequest has returned some trajectory observations.
-                // Process the path only when the confidence is over 90%.
-                self.trajectoryView.duration = path.timeRange.duration.seconds
-                self.trajectoryView.points = path.detectedPoints
-                self.trajectoryView.perform(transition: .fadeIn, duration: 0.25)
-                if !self.trajectoryView.fullTrajectory.isEmpty {
-                    // Hide the previous throw metrics once a new throw is detected.
-                    if !self.dashboardView.isHidden {
-                        self.resetKPILabels()
-                    }
-                    self.updateTrajectoryRegions()
-                    if self.trajectoryView.isThrowComplete {
-                        // Update the player statistics once the throw is complete.
-                        self.updatePlayerStats(controller)
-                    }
-                }
-                self.noObservationFrameCount = 0
-            }
-        }
-    }
-    
-    func updatePlayerStats(_ controller: CameraViewController) {
-        let finalBagLocation = trajectoryView.finalBagLocation
-        playerStats.storePath(self.trajectoryView.fullTrajectory.cgPath)
-        trajectoryView.resetPath()
-        lastThrowMetrics.updateThrowType(playerStats.getLastThrowType())
-        let score = computeScore(controller.viewPointForVisionPoint(finalBagLocation))
-        // Compute the speed in mph
-        // trajectoryView.speed is in points/second, convert that to meters/second by multiplying the pointToMeterMultiplier.
-        // 1 meters/second = 2.24 miles/hour
-        let releaseSpeed = round(trajectoryView.speed * gameManager.pointToMeterMultiplier * 2.24 * 100) / 100
-        let releaseAngle = playerStats.getReleaseAngle()
-        lastThrowMetrics.updateMetrics(newScore: score, speed: releaseSpeed, angle: releaseAngle)
-        self.gameManager.stateMachine.enter(GameManager.ThrowCompletedState.self)
-    }
-    
-    func computeScore(_ finalBagLocation: CGPoint) -> Scoring {
-        let heightBuffer: CGFloat = 100
-        let boardRegion = gameManager.boardRegion
-        // In some cases trajectory observation may not end exactly on the board and end a few pixels above the board.
-        // This can happen especially when the bag bounces on the board. Filtering conditions can be adjusted to get those observations as well.
-        // Defining extended regions for board and the hole with a heightBuffer to cover these cases.
-        let extendedBoardRegion = CGRect(x: boardRegion.origin.x, y: boardRegion.origin.y - heightBuffer,
-                                        width: boardRegion.width, height: boardRegion.height + heightBuffer)
-        let holeRegion = gameManager.holeRegion
-        let extendedHoleRegion = CGRect(x: holeRegion.origin.x, y: holeRegion.origin.y - heightBuffer,
-                                        width: holeRegion.width, height: holeRegion.height + heightBuffer)
-        if !extendedBoardRegion.contains(finalBagLocation) {
-            // Bag missed the board
-            return Scoring.zero
-        } else if extendedHoleRegion.contains(finalBagLocation) {
-            // Bag landed in the hole
-            return lastThrowMetrics.throwType == .underleg ? Scoring.fifteen : Scoring.three
-        } else {
-            // Bag landed on the board
-            return lastThrowMetrics.throwType == .underleg ? Scoring.five : Scoring.one
-        }
-    }
 }
+
+
 
 extension GameViewController: GameStateChangeObserver {
     func gameManagerDidEnter(state: GameManager.State, from previousState: GameManager.State?) {
@@ -292,30 +262,16 @@ extension GameViewController: GameStateChangeObserver {
             playerDetected = true
             playerStats.reset()
             playerBoundingBox.perform(transition: .fadeOut, duration: 1.0)
-            gameStatusLabel.text = "Go"
-            gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
-                self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
-            }
-        case is GameManager.TrackThrowsState:
-            resetTrajectoryRegions()
-            trajectoryView.roi = throwRegion
-        case is GameManager.ThrowCompletedState:
-            dashboardView.speed = lastThrowMetrics.releaseSpeed
-            dashboardView.animateSpeedChart()
-            playerStats.adjustMetrics(score: lastThrowMetrics.score, speed: lastThrowMetrics.releaseSpeed,
-                                      releaseAngle: lastThrowMetrics.releaseAngle, throwType: lastThrowMetrics.throwType)
-            playerStats.resetObservations()
-            trajectoryInFlightPoseObservations = 0
-            self.updateKPILabels()
+            //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             
-            gameStatusLabel.text = lastThrowMetrics.score.rawValue > 0 ? "+\(lastThrowMetrics.score.rawValue)" : ""
-            gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
-                if self.playerStats.throwCount == GameConstants.maxThrows {
-                    self.gameManager.stateMachine.enter(GameManager.ShowSummaryState.self)
-                } else {
-                    self.gameManager.stateMachine.enter(GameManager.TrackThrowsState.self)
-                }
-            }
+            self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
+
+        case is GameManager.TrackServeState:
+            print("track")
+        case is GameManager.ServeDetectedState:
+            print("Serve detected state is ooooon")
+            self.playButton.isHidden = false
+            self.compareButton.isHidden = false
         default:
             break
         }
@@ -325,67 +281,49 @@ extension GameViewController: GameStateChangeObserver {
 extension GameViewController: CameraViewControllerOutputDelegate {
     func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation) {
         let visionHandler = VNImageRequestHandler(cmSampleBuffer: buffer, orientation: orientation, options: [:])
-        if gameManager.stateMachine.currentState is GameManager.TrackThrowsState {
+        if gameManager.stateMachine.currentState is GameManager.TrackServeState {
             DispatchQueue.main.async {
                 // Get the frame of rendered view
                 let normalizedFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
                 self.jointSegmentView.frame = controller.viewRectForVisionRect(normalizedFrame)
-                self.trajectoryView.frame = controller.viewRectForVisionRect(normalizedFrame)
             }
-            // Perform the trajectory request in a separate dispatch queue.
-            trajectoryQueue.async {
-                do {
-                    try visionHandler.perform([self.detectTrajectoryRequest])
-                    
-                    if let results = self.detectTrajectoryRequest.results {
-                        DispatchQueue.main.async {
-                            self.processTrajectoryObservations(controller, results)
-                        }
-                    }
-                } catch {
-                    AppError.display(error, inViewController: self)
-                }
-            }
+            
         }
         // Body pose request is performed on the same camera queue to ensure the highlighted joints are aligned with the player.
         // Run bodypose request for additional GameConstants.maxPostReleasePoseObservations frames after the first trajectory observation is detected.
-        if !(self.trajectoryView.inFlight && self.trajectoryInFlightPoseObservations >= GameConstants.maxTrajectoryInFlightPoseObservations) {
-            do {
-                try visionHandler.perform([detectPlayerRequest])
-                if let result = detectPlayerRequest.results?.first {
-                    let box = humanBoundingBox(for: result)
-                    let boxView = playerBoundingBox
-                    DispatchQueue.main.async {
-                        let inset: CGFloat = -20.0
-                        let viewRect = controller.viewRectForVisionRect(box).insetBy(dx: inset, dy: inset)
-                        self.updateBoundingBox(boxView, withRect: viewRect)
-                        if !self.playerDetected && !boxView.isHidden {
-                            self.gameStatusLabel.alpha = 0
-                            self.resetTrajectoryRegions()
-                            self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
-                        }
+        do {
+            try visionHandler.perform([detectPlayerRequest])
+            if let result = detectPlayerRequest.results?.first {
+                let box = humanBoundingBox(for: result)
+                let boxView = playerBoundingBox
+                DispatchQueue.main.async {
+                    let inset: CGFloat = -20.0
+                    let viewRect = controller.viewRectForVisionRect(box).insetBy(dx: inset, dy: inset)
+                    self.updateBoundingBox(boxView, withRect: viewRect)
+                    if !self.playerDetected && !boxView.isHidden {
+                        //self.gameStatusLabel.alpha = 0
+                        self.gameManager.stateMachine.enter(GameManager.DetectedPlayerState.self)
                     }
                 }
-            } catch {
-                AppError.display(error, inViewController: self)
             }
-        } else {
-            // Hide player bounding box
-            DispatchQueue.main.async {
-                if !self.playerBoundingBox.isHidden {
-                    self.playerBoundingBox.isHidden = true
-                    self.jointSegmentView.resetView()
-                }
-            }
+        } catch {
+            AppError.display(error, inViewController: self)
         }
+        
     }
 }
 
-extension GameViewController {
-    @objc
-    func handleShowSummaryGesture(_ gesture: UITapGestureRecognizer) {
-        if gesture.state == .ended {
-            self.gameManager.stateMachine.enter(GameManager.ShowSummaryState.self)
-        }
+
+
+protocol GameViewControllerDelegate: AnyObject {
+    func pauseVideoPlayback()
+    func resumeVideoPlayback()
+}
+extension RootViewController: GameViewControllerDelegate {
+    func pauseVideoPlayback() {
+        self.cameraViewController.pauseVideoPlayback()
+    }
+    func resumeVideoPlayback() {
+        self.cameraViewController.resumeVideoPlayback()
     }
 }

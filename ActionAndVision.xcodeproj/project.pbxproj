@@ -14,14 +14,14 @@
 		5F982D2924912200006534BC /* AnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2824912200006534BC /* AnimatedTransitioning.swift */; };
 		5F982D2B2491233C006534BC /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2A2491233C006534BC /* BoundingBoxView.swift */; };
 		5F982D2D24912A75006534BC /* JointSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2C24912A75006534BC /* JointSegmentView.swift */; };
-		5F982D2F24912B53006534BC /* TrajectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D2E24912B53006534BC /* TrajectoryView.swift */; };
-		5F982D3124912CE4006534BC /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3024912CE4006534BC /* DashboardView.swift */; };
 		5F982D3324912D4A006534BC /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3224912D4A006534BC /* ProgressView.swift */; };
 		5F982D3524912DD2006534BC /* OverlayLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3424912DD1006534BC /* OverlayLabel.swift */; };
 		5F982D3724912E7C006534BC /* VideoOutputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F982D3624912E7C006534BC /* VideoOutputViews.swift */; };
 		5FD9A16923ED9DE5004A8F31 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD9A16823ED9DE5004A8F31 /* GameManager.swift */; };
 		5FF06753243E619F0021D743 /* CameraViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FF06752243E619E0021D743 /* CameraViewController.xib */; };
 		5FF06755243E88EF0021D743 /* SourcePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */; };
+		AA300C2F2BD773400050C993 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA300C2E2BD773400050C993 /* FeedbackViewController.xib */; };
+		AA649F862BD5C5B100200B57 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */; };
 		DF1A92A623E7575A00A9FD49 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A92A523E7575A00A9FD49 /* Common.swift */; };
 		DF3EC82D23D65E340007EAE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82C23D65E340007EAE9 /* AppDelegate.swift */; };
 		DF3EC82F23D65E340007EAE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82E23D65E340007EAE9 /* SceneDelegate.swift */; };
@@ -46,14 +46,14 @@
 		5F982D2824912200006534BC /* AnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTransitioning.swift; sourceTree = "<group>"; };
 		5F982D2A2491233C006534BC /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		5F982D2C24912A75006534BC /* JointSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointSegmentView.swift; sourceTree = "<group>"; };
-		5F982D2E24912B53006534BC /* TrajectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrajectoryView.swift; sourceTree = "<group>"; };
-		5F982D3024912CE4006534BC /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		5F982D3224912D4A006534BC /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		5F982D3424912DD1006534BC /* OverlayLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayLabel.swift; sourceTree = "<group>"; };
 		5F982D3624912E7C006534BC /* VideoOutputViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOutputViews.swift; sourceTree = "<group>"; };
 		5FD9A16823ED9DE5004A8F31 /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
 		5FF06752243E619E0021D743 /* CameraViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraViewController.xib; sourceTree = "<group>"; };
 		5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcePickerViewController.swift; sourceTree = "<group>"; };
+		AA300C2E2BD773400050C993 /* FeedbackViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
+		AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		B222C85AFC0A20F716D652A4 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		DF1A92A523E7575A00A9FD49 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		DF3EC82923D65E340007EAE9 /* ActionAndVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionAndVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,11 +87,9 @@
 			children = (
 				5F982D2824912200006534BC /* AnimatedTransitioning.swift */,
 				5F982D2A2491233C006534BC /* BoundingBoxView.swift */,
-				5F982D3024912CE4006534BC /* DashboardView.swift */,
 				5F982D2C24912A75006534BC /* JointSegmentView.swift */,
 				5F982D3424912DD1006534BC /* OverlayLabel.swift */,
 				5F982D3224912D4A006534BC /* ProgressView.swift */,
-				5F982D2E24912B53006534BC /* TrajectoryView.swift */,
 				5F982D3624912E7C006534BC /* VideoOutputViews.swift */,
 			);
 			path = Views;
@@ -135,22 +133,24 @@
 		DF3EC82B23D65E340007EAE9 /* ActionAndVision */ = {
 			isa = PBXGroup;
 			children = (
+				DF1A92A523E7575A00A9FD49 /* Common.swift */,
 				DF3EC82C23D65E340007EAE9 /* AppDelegate.swift */,
 				5FD9A16823ED9DE5004A8F31 /* GameManager.swift */,
 				DF3EC82E23D65E340007EAE9 /* SceneDelegate.swift */,
-				5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */,
 				5F3A4A4F23F2F370009E9DF6 /* RootViewController.swift */,
-				DF3EC83023D65E340007EAE9 /* CameraViewController.swift */,
+				5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */,
 				5F1EC07923EC9F8400E35618 /* SetupViewController.swift */,
+				DF3EC83023D65E340007EAE9 /* CameraViewController.swift */,
 				DF3EC84523D669FD0007EAE9 /* GameViewController.swift */,
+				AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */,
 				DF907A5424161D2A00AE0814 /* SummaryViewController.swift */,
-				DF1A92A523E7575A00A9FD49 /* Common.swift */,
 				5F982D27249121A5006534BC /* Views */,
 				DF3EC83223D65E340007EAE9 /* Main.storyboard */,
 				5FF06752243E619E0021D743 /* CameraViewController.xib */,
 				5F1EC07723EC9EA100E35618 /* SetupViewController.xib */,
 				DF3EC84423D669FD0007EAE9 /* GameViewController.xib */,
 				DF907A5524161D2A00AE0814 /* SummaryViewController.xib */,
+				AA300C2E2BD773400050C993 /* FeedbackViewController.xib */,
 				DF3EC83823D65E390007EAE9 /* Assets.xcassets */,
 				DF3EC83A23D65E390007EAE9 /* LaunchScreen.storyboard */,
 				DF3EC83D23D65E390007EAE9 /* Info.plist */,
@@ -225,6 +225,7 @@
 				DF3EC83923D65E390007EAE9 /* Assets.xcassets in Resources */,
 				DF3EC83423D65E340007EAE9 /* Main.storyboard in Resources */,
 				DF907A5724161D2A00AE0814 /* SummaryViewController.xib in Resources */,
+				AA300C2F2BD773400050C993 /* FeedbackViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,17 +239,16 @@
 				DF3EC84723D669FD0007EAE9 /* GameViewController.swift in Sources */,
 				5FF06755243E88EF0021D743 /* SourcePickerViewController.swift in Sources */,
 				5F982D2B2491233C006534BC /* BoundingBoxView.swift in Sources */,
+				AA649F862BD5C5B100200B57 /* FeedbackViewController.swift in Sources */,
 				5FD9A16923ED9DE5004A8F31 /* GameManager.swift in Sources */,
 				5F3A4A5023F2F370009E9DF6 /* RootViewController.swift in Sources */,
 				DF3EC83123D65E340007EAE9 /* CameraViewController.swift in Sources */,
 				5F982D2D24912A75006534BC /* JointSegmentView.swift in Sources */,
 				5F982D2924912200006534BC /* AnimatedTransitioning.swift in Sources */,
 				DF907A5624161D2A00AE0814 /* SummaryViewController.swift in Sources */,
-				5F982D2F24912B53006534BC /* TrajectoryView.swift in Sources */,
 				DFC5C176249839F900392F58 /* PlayerActionClassifier.mlmodel in Sources */,
 				DF3EC82D23D65E340007EAE9 /* AppDelegate.swift in Sources */,
 				DF3EC82F23D65E340007EAE9 /* SceneDelegate.swift in Sources */,
-				5F982D3124912CE4006534BC /* DashboardView.swift in Sources */,
 				5F24EFD624756AD400EA0CBA /* GameBoardDetector.mlmodel in Sources */,
 				DF1A92A623E7575A00A9FD49 /* Common.swift in Sources */,
 				5F982D3724912E7C006534BC /* VideoOutputViews.swift in Sources */,
