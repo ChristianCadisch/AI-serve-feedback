@@ -104,7 +104,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         // Add the button to the view
         view.addSubview(compareButton)
         view.bringSubviewToFront(compareButton)
-        compareButton.isHidden = true
+        //compareButton.isHidden = true
         
         setupNextPlayerButton()
 
@@ -265,11 +265,7 @@ extension GameViewController: GameStateChangeObserver {
             //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             
             self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
-            /*
-            gameStatusLabel.text = "Go"
-            gameStatusLabel.perform(transitions: [.popUp, .popOut], durations: [0.25, 0.12], delayBetween: 1) {
-                self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
-            }*/
+
         case is GameManager.TrackServeState:
             print("track")
         case is GameManager.ServeDetectedState:
