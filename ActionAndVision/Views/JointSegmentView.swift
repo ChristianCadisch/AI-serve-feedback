@@ -69,18 +69,32 @@ class JointSegmentView: UIView, AnimatedTransitioning {
             jointPath.removeAllPoints()
             jointSegmentPath.removeAllPoints()
             
-            for index in 0 ..< jointsOfInterest.count {
-                if let nextJoint = joints[jointsOfInterest[index]] {
-                    let nextJointScaled = nextJoint.applying(flipVertical).applying(scaleToBounds)
-                    let nextJointPath = UIBezierPath(arcCenter: nextJointScaled, radius: jointRadius,
-                                                     startAngle: CGFloat(0), endAngle: CGFloat.pi * 2, clockwise: true)
-                    jointPath.append(nextJointPath)
-                    
-                    if jointSegmentPath.isEmpty {
-                        jointSegmentPath.move(to: nextJointScaled)
-                    } else {
-                        jointSegmentPath.addLine(to: nextJointScaled)
-                    }
+        // Define anatomical connections for right side
+            let rightSideConnections: [(VNHumanBodyPoseObservation.JointName, VNHumanBodyPoseObservation.JointName)] = [
+                (.rightShoulder, .rightElbow),
+                (.rightShoulder, .rightHip),
+                (.rightElbow, .rightWrist),
+                (.rightHip, .rightKnee),
+                (.rightKnee, .rightAnkle)
+            ]
+
+            // Draw joints and segments based on defined connections
+            for (startJoint, endJoint) in rightSideConnections {
+                if let startPoint = joints[startJoint], let endPoint = joints[endJoint] {
+                    let startJointScaled = startPoint.applying(flipVertical).applying(scaleToBounds)
+                    let endJointScaled = endPoint.applying(flipVertical).applying(scaleToBounds)
+
+                    // Draw joint circles
+                    let startJointPath = UIBezierPath(arcCenter: startJointScaled, radius: jointRadius,
+                                                      startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+                    let endJointPath = UIBezierPath(arcCenter: endJointScaled, radius: jointRadius,
+                                                    startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+                    jointPath.append(startJointPath)
+                    jointPath.append(endJointPath)
+
+                    // Draw lines between connected joints
+                    jointSegmentPath.move(to: startJointScaled)
+                    jointSegmentPath.addLine(to: endJointScaled)
                 }
             }
 
