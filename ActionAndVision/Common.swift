@@ -152,8 +152,16 @@ let jointsOfInterest: [VNHumanBodyPoseObservation.JointName] = [
     .rightShoulder,
     .rightHip,
     .rightKnee,
-    .rightAnkle
+    .rightAnkle,
+    // Add left side joints
+    .leftWrist,
+    .leftElbow,
+    .leftShoulder,
+    .leftHip,
+    .leftKnee,
+    .leftAnkle
 ]
+
 
 func armJoints(for observation: VNHumanBodyPoseObservation) -> (CGPoint, CGPoint, CGPoint) {
     var rightShoulder = CGPoint(x: 0, y: 0)

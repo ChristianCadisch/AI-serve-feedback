@@ -103,10 +103,15 @@ extension RootViewController: GameStateChangeObserver {
         switch state {
         case is GameManager.DetectingPlayerState:
             controllerToPresent = GameViewController()
+        
+        case is GameManager.TrophyDetectedState:
+            print("TrophyPoseDetected state activated")
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.cameraViewController.pauseVideoPlayback()
+            }
             
         case is GameManager.ServeDetectedState:
-            print("ServeFeedbackState entered, going through the transition")
-            //DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+            print("ServeDetectedState state activated")
                 DispatchQueue.main.asyncAfter(deadline: .now()) {
                     self.cameraViewController.pauseVideoPlayback()
                 }
@@ -115,9 +120,6 @@ extension RootViewController: GameStateChangeObserver {
             DispatchQueue.main.asyncAfter(deadline: .now()) {
                 self.cameraViewController.resumeVideoPlayback()
             }
-            
-        
-            //controllerToPresent = FeedbackViewController()
         case is GameManager.ShowSummaryState:
             controllerToPresent = SummaryViewController() // Assuming direct instantiation works here.
         default:

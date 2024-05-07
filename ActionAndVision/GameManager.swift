@@ -47,6 +47,8 @@ class GameManager {
     class TrackServeState: State {
     }
     
+    class TrophyDetectedState: State {
+    }
     
     class ServeDetectedState: State {
     }
@@ -76,9 +78,10 @@ class GameManager {
             SetupCameraState([DetectingPlayerState.self]),
             DetectingPlayerState([DetectedPlayerState.self]),
             DetectedPlayerState([TrackServeState.self]),
-            TrackServeState([ShowSummaryState.self, ServeDetectedState.self]),
+            TrackServeState([ShowSummaryState.self, ServeDetectedState.self, TrophyDetectedState.self]),
+            TrophyDetectedState([ServeDetectedContinueState.self, TrackServeState.self, ShowSummaryState.self]),
             ServeDetectedState([ServeDetectedContinueState.self, TrackServeState.self, ShowSummaryState.self]),
-            ServeDetectedContinueState([ServeDetectedState.self]),
+            ServeDetectedContinueState([ServeDetectedState.self, TrophyDetectedState.self]),
             ShowSummaryState([DetectingPlayerState.self])
         ]
         // Allow transitions to Inactive from any state except itself

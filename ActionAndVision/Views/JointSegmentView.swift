@@ -21,8 +21,10 @@ class JointSegmentView: UIView, AnimatedTransitioning {
     private let rightWristJointName = VNHumanBodyPoseObservation.JointName.rightWrist
     private let rightShoulderJointName = VNHumanBodyPoseObservation.JointName.rightShoulder
     private var serveDetected = false
-    //weak var delegate: JointSegmentViewDelegate?
-
+    
+    private let leftWristJointName = VNHumanBodyPoseObservation.JointName.leftWrist
+    private let leftShoulderJointName = VNHumanBodyPoseObservation.JointName.leftShoulder
+    private var trophyDetected = false
 
     private let jointRadius: CGFloat = 3.0
     private let jointLayer = CAShapeLayer()
@@ -81,30 +83,44 @@ class JointSegmentView: UIView, AnimatedTransitioning {
                     }
                 }
             }
-          /*
-        if let rightWristJoint = joints[rightWristJointName], let rightShoulderJoint = joints[rightShoulderJointName] {
-            let yDifference = rightShoulderJoint.y - rightWristJoint.y
-            print("Difference between right shoulder and right wrist y-coordinates: \(yDifference)")
-        }*/
-        
+
+        // serve detection
         if let rightWristJoint = joints[rightWristJointName], let rightShoulderJoint = joints[rightShoulderJointName] {
                     let yDifference = rightShoulderJoint.y - rightWristJoint.y
                     if yDifference < -0.1 {
                         if !serveDetected {
                             print("Tennis serve detected!")
+                            print("Trophy variable: ", trophyDetected)
                             serveDetected = true
-                            //delegate?.jointSegmentViewDidDetectServe(self)
-                            //NotificationCenter.default.post(name: .serveDetected, object: nil)
                             self.gameManager.stateMachine.enter(GameManager.ServeDetectedState.self)
                         }
                     } else {
                         serveDetected = false
                     }
-                }
+            }
+        
+        
+        // trophy pose detection - currently only works on first trophy pose?
+        if let leftWristJoint = joints[leftWristJointName], let leftShoulderJoint = joints[leftShoulderJointName] {
+                    let yDifference = leftShoulderJoint.y - leftWristJoint.y
+                    if yDifference < -0.1 { // checking if the wrist is above the shoulder
+                        if !trophyDetected {
+                            print("Trophy pose detected!")
+                            trophyDetected = true
+                            self.gameManager.stateMachine.enter(GameManager.TrophyDetectedState.self)
+                        }
+                    } else {
+                        trophyDetected = false
+                    }
+            }
+        
+
+        
             jointLayer.path = jointPath.cgPath
             jointSegmentLayer.path = jointSegmentPath.cgPath
         }
     
+        
     
 }
 

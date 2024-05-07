@@ -193,14 +193,7 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         super.viewDidDisappear(animated)
     }
 
-    /*
-    func getScoreLabelAttributedStringForScore(_ score: Int) -> NSAttributedString {
-        let totalScore = NSMutableAttributedString(string: "Total Score ", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)])
-        totalScore.append(NSAttributedString(string: "\(score)", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)]))
-        totalScore.append(NSAttributedString(string: "/40", attributes: [.foregroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.65)]))
-        return totalScore
-    }
-*/
+
     func setUIElements() {
         
         playerBoundingBox.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -209,13 +202,11 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
 
         view.addSubview(playerBoundingBox)
         view.addSubview(jointSegmentView)
-        //gameStatusLabel.text = "Waiting for player"
-        //scoreLabel.attributedText = getScoreLabelAttributedStringForScore(0)
+
     }
 
 
     func updateKPILabels() {
-        //scoreLabel.text = "Hits: \(playerStats.hits)"
     }
 
     func updateBoundingBox(_ boundingBox: BoundingBoxView, withRect rect: CGRect?) {
@@ -263,11 +254,13 @@ extension GameViewController: GameStateChangeObserver {
             playerStats.reset()
             playerBoundingBox.perform(transition: .fadeOut, duration: 1.0)
             //roiBoundingBox.perform(transition: .fadeOut, duration: 1.0)
-            
             self.gameManager.stateMachine.enter(GameManager.TrackServeState.self)
 
         case is GameManager.TrackServeState:
             print("track")
+        case is GameManager.TrophyDetectedState:
+            self.playButton.isHidden = false
+            self.compareButton.isHidden = false
         case is GameManager.ServeDetectedState:
             print("Serve detected state is ooooon")
             self.playButton.isHidden = false
