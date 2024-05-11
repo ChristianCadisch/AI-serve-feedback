@@ -22,6 +22,7 @@
 		5FF06755243E88EF0021D743 /* SourcePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */; };
 		AA300C2F2BD773400050C993 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA300C2E2BD773400050C993 /* FeedbackViewController.xib */; };
 		AA649F862BD5C5B100200B57 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */; };
+		AAC193B12BF01588002E99E9 /* Federer_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = AAC193B02BF01588002E99E9 /* Federer_video.mp4 */; };
 		DF1A92A623E7575A00A9FD49 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A92A523E7575A00A9FD49 /* Common.swift */; };
 		DF3EC82D23D65E340007EAE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82C23D65E340007EAE9 /* AppDelegate.swift */; };
 		DF3EC82F23D65E340007EAE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82E23D65E340007EAE9 /* SceneDelegate.swift */; };
@@ -54,6 +55,7 @@
 		5FF06754243E88EF0021D743 /* SourcePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcePickerViewController.swift; sourceTree = "<group>"; };
 		AA300C2E2BD773400050C993 /* FeedbackViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
 		AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
+		AAC193B02BF01588002E99E9 /* Federer_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Federer_video.mp4; sourceTree = "<group>"; };
 		B222C85AFC0A20F716D652A4 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		DF1A92A523E7575A00A9FD49 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		DF3EC82923D65E340007EAE9 /* ActionAndVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionAndVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +154,7 @@
 				DF907A5524161D2A00AE0814 /* SummaryViewController.xib */,
 				AA300C2E2BD773400050C993 /* FeedbackViewController.xib */,
 				DF3EC83823D65E390007EAE9 /* Assets.xcassets */,
+				AAC193B02BF01588002E99E9 /* Federer_video.mp4 */,
 				DF3EC83A23D65E390007EAE9 /* LaunchScreen.storyboard */,
 				DF3EC83D23D65E390007EAE9 /* Info.plist */,
 				5F24EFD524756AD400EA0CBA /* GameBoardDetector.mlmodel */,
@@ -224,6 +227,7 @@
 				DF3EC83C23D65E390007EAE9 /* LaunchScreen.storyboard in Resources */,
 				DF3EC83923D65E390007EAE9 /* Assets.xcassets in Resources */,
 				DF3EC83423D65E340007EAE9 /* Main.storyboard in Resources */,
+				AAC193B12BF01588002E99E9 /* Federer_video.mp4 in Resources */,
 				DF907A5724161D2A00AE0814 /* SummaryViewController.xib in Resources */,
 				AA300C2F2BD773400050C993 /* FeedbackViewController.xib in Resources */,
 			);

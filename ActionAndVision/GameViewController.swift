@@ -28,7 +28,9 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     private let playButton = UIButton(type: .system)
     private let compareButton = UIButton(type: .system)
-    private var proImageView: UIImageView?
+    //private var proImageView: UIImageView?
+    private var proPlayer: AVPlayer?
+    private var proPlayerLayer: AVPlayerLayer?
     private let nextPlayerButton = UIButton(type: .system)
 
 
@@ -117,11 +119,12 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                                         y: UIScreen.main.bounds.height - 100, // Adjusted to bottom
                                         width: 100,
                                         height: 50)
-        nextPlayerButton.addTarget(self, action: #selector(nextPlayerButtonPressed(_:)), for: .touchUpInside)
+        //nextPlayerButton.addTarget(self, action: #selector(nextPlayerButtonPressed(_:)), for: .touchUpInside)
         view.addSubview(nextPlayerButton)
         view.bringSubviewToFront(nextPlayerButton)
     }
     // Implement the action for the button
+    /*
     @objc func nextPlayerButtonPressed(_ sender: UIButton) {
         // Assuming you have an array of player images or an image index to cycle through
         let playerImages = ["Federer", "Alcaraz"] // Example player images
@@ -134,13 +137,14 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         }
         layoutImageView() // Re-layout if needed
     }
-
+     */
     @IBAction func playButtonPressed(_ sender: Any) {
         print("GVC Continue Video button pressed")
         playButton.isHidden = true
         self.gameManager.stateMachine.enter(GameManager.ServeDetectedContinueState.self)
     }
     
+    /*
     @IBAction func compareButtonPressed(_ sender: Any) {
         print("Compare button pressed")
         
@@ -158,30 +162,58 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         // Layout the image view on the right half of the screen
         layoutImageView()
     }
-    
-    // for the comparison image
-    private func layoutImageView() {
-        guard let imageView = proImageView else { return }
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+     // for the comparison image
+     private func layoutImageView() {
+         guard let imageView = proImageView else { return }
+         imageView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Remove any old constraints that might be set
-        NSLayoutConstraint.deactivate(imageView.constraints)
+         // Remove any old constraints that might be set
+         NSLayoutConstraint.deactivate(imageView.constraints)
+         
+         // Activate new constraints
+         NSLayoutConstraint.activate([
+             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), // Smaller margin for top
+             imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10), // Smaller margin for bottom
+             imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8) // Increased width to 80% of the parent view
+         ])
+         
+         view.layoutIfNeeded() // Force the layout to update
+     }
+     */
+    @IBAction func compareButtonPressed(_ sender: Any) {
+        // Setup the proPlayer if it has not been setup
+        if proPlayer == nil {
+            proPlayer = AVPlayer()
+            proPlayerLayer = AVPlayerLayer(player: proPlayer)
+            proPlayerLayer?.frame = CGRect(x: 0, y: 0, width: 100, height: 100) // Set initial frame, adjust as necessary
+            proPlayerLayer?.videoGravity = .resizeAspect
+            if let layer = proPlayerLayer {
+                view.layer.addSublayer(layer)
+            }
+        }
         
-        // Activate new constraints
-        NSLayoutConstraint.activate([
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), // Smaller margin for top
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10), // Smaller margin for bottom
-            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8) // Increased width to 80% of the parent view
-        ])
-        
-        view.layoutIfNeeded() // Force the layout to update
+        // Fetch the video path and create a URL
+        if let videoPath = Bundle.main.path(forResource: "Federer_video", ofType: "mp4") {
+            let videoURL = URL(fileURLWithPath: videoPath)
+            let playerItem = AVPlayerItem(url: videoURL)
+            proPlayer?.replaceCurrentItem(with: playerItem)
+            proPlayer?.play()
+        } else {
+            print("Failed to find the video file in the app bundle.")
+        }
+
+        // Adjust the layer's size and position
+        layoutVideoLayer()
     }
 
 
-
-
-
+    private func layoutVideoLayer() {
+        guard let layer = proPlayerLayer else { return }
+        layer.frame = CGRect(x: 0, y: 0, width: view.bounds.width * 0.8, height: view.bounds.height)
+        layer.videoGravity = .resizeAspect
+    }
+    
 
     
     override func viewDidAppear(_ animated: Bool) {
