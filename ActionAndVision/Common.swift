@@ -46,6 +46,8 @@ struct ThrowMetrics {
 }
 
 struct PlayerStats {
+    var feedbackText = String()
+    var feedbackArray = [String]()
     var hits = 0
     var totalScore = 0
     var throwCount = 0

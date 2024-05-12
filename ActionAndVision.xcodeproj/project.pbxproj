@@ -23,6 +23,7 @@
 		AA300C2F2BD773400050C993 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA300C2E2BD773400050C993 /* FeedbackViewController.xib */; };
 		AA649F862BD5C5B100200B57 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */; };
 		AAC193B12BF01588002E99E9 /* Federer_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = AAC193B02BF01588002E99E9 /* Federer_video.mp4 */; };
+		AAC193B32BF046D3002E99E9 /* AICoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC193B22BF046D3002E99E9 /* AICoach.swift */; };
 		DF1A92A623E7575A00A9FD49 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A92A523E7575A00A9FD49 /* Common.swift */; };
 		DF3EC82D23D65E340007EAE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82C23D65E340007EAE9 /* AppDelegate.swift */; };
 		DF3EC82F23D65E340007EAE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EC82E23D65E340007EAE9 /* SceneDelegate.swift */; };
@@ -56,6 +57,7 @@
 		AA300C2E2BD773400050C993 /* FeedbackViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
 		AA649F852BD5C5B100200B57 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		AAC193B02BF01588002E99E9 /* Federer_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Federer_video.mp4; sourceTree = "<group>"; };
+		AAC193B22BF046D3002E99E9 /* AICoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICoach.swift; sourceTree = "<group>"; };
 		B222C85AFC0A20F716D652A4 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		DF1A92A523E7575A00A9FD49 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		DF3EC82923D65E340007EAE9 /* ActionAndVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionAndVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,7 @@
 				5F982D2824912200006534BC /* AnimatedTransitioning.swift */,
 				5F982D2A2491233C006534BC /* BoundingBoxView.swift */,
 				5F982D2C24912A75006534BC /* JointSegmentView.swift */,
+				AAC193B22BF046D3002E99E9 /* AICoach.swift */,
 				5F982D3424912DD1006534BC /* OverlayLabel.swift */,
 				5F982D3224912D4A006534BC /* ProgressView.swift */,
 				5F982D3624912E7C006534BC /* VideoOutputViews.swift */,
@@ -240,6 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAC193B32BF046D3002E99E9 /* AICoach.swift in Sources */,
 				DF3EC84723D669FD0007EAE9 /* GameViewController.swift in Sources */,
 				5FF06755243E88EF0021D743 /* SourcePickerViewController.swift in Sources */,
 				5F982D2B2491233C006534BC /* BoundingBoxView.swift in Sources */,
