@@ -74,14 +74,21 @@ class GameViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         setupNextPlayerButton()
         
         // Initialize and configure the text field
-        feedbackLabel.text = GameManager.shared.playerStats.feedbackText
         feedbackLabel.numberOfLines = 0  // Allows label to have multiple lines
-        feedbackLabel.textAlignment = .left
-        feedbackLabel.font = UIFont.systemFont(ofSize: 16)
-        feedbackLabel.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)  // Semi-transparent gray background
-        feedbackLabel.frame = CGRect(x: 00, y: UIScreen.main.bounds.height - 150, width: UIScreen.main.bounds.width - 80, height: 150)
+        feedbackLabel.textAlignment = .left  // Center align text
+        feedbackLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)  // Adjust size and weight
+        feedbackLabel.textColor = UIColor.white  // Set text color
+        feedbackLabel.backgroundColor = UIColor.black.withAlphaComponent(0.7)  // Adjust background color and transparency
+        feedbackLabel.layer.cornerRadius = 10  // Rounded corners
+        feedbackLabel.layer.masksToBounds = true  // Clip to bounds
+        feedbackLabel.layer.shadowOpacity = 0.2  // Optional: shadow
+        feedbackLabel.layer.shadowRadius = 3
+        feedbackLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
+        feedbackLabel.layer.shadowColor = UIColor.black.cgColor
 
+        feedbackLabel.frame = CGRect(x: -10, y: UIScreen.main.bounds.height - 130, width: UIScreen.main.bounds.width - 40, height: 140)  // Adjusted for padding
         view.addSubview(feedbackLabel)
+        
         
         
     }
