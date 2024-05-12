@@ -44,15 +44,13 @@ class AICoach {
     // Function to provide feedback based on joint positions
     static func provideFeedback(for joints: [VNHumanBodyPoseObservation.JointName: CGPoint], pose: String) {
         
-        
-        
         // ANALYZE TROPHY POSE FROM BEHIND
         if pose == "Trophy behind" {
+            GameManager.shared.playerStats.feedbackText = "Nice Trophy Pose! Let's analyze it: \n"
             
             // Calculate knee angles
             guard let leftKneeAngle = calculateAngle(from: joints, joint1: .leftHip, joint2: .leftKnee, joint3: .leftAnkle),
                   let rightKneeAngle = calculateAngle(from: joints, joint1: .rightHip, joint2: .rightKnee, joint3: .rightAnkle) else {
-                print("Could not calculate knee angles.")
                 return
             }
             
@@ -61,14 +59,13 @@ class AICoach {
             
             // Feedback on knee angles
             if averageKneeAngle < federerAverageAngle {
-                print("Compared to Roger Federer, your knees are bent \(federerAverageAngle - averageKneeAngle)° less. This gives your serve less power.")
+                GameManager.shared.playerStats.feedbackText += "Compared to Roger Federer, your knees are bent \(federerAverageAngle - averageKneeAngle)° less. This gives your serve less power."
             } else {
-                print("Your knee bending is comparable to or better than Roger Federer's, which is good for power.")
+                GameManager.shared.playerStats.feedbackText += "Your knee bending is comparable to or better than Roger Federer's, which is good for power."
             }
-            
             // Calculate foot placement
             guard let leftAnkle = joints[.leftAnkle], let rightAnkle = joints[.rightAnkle] else {
-                print("Could not find ankle positions.")
+                GameManager.shared.playerStats.feedbackText += "Could not find ankle positions.\n"
                 return
             }
             
@@ -77,17 +74,20 @@ class AICoach {
             
             // Feedback on foot placement
             if playerStanceDistance / federerStanceDistance < 0.9 {
-                print("Federer's feet are \(1 / (playerStanceDistance / federerStanceDistance)) times more apart. This gives more stability.")
+                GameManager.shared.playerStats.feedbackText += "Federer's feet are \(1 / (playerStanceDistance / federerStanceDistance)) times more apart. This gives more stability.\n"
             } else {
-                print("Your stance width is comparable to or wider than Federer's, which is good for stability.")
+                GameManager.shared.playerStats.feedbackText += "Your stance width is comparable to or wider than Federer's, which is good for stability.\n"
             }
+        }
+        
+        else if pose == "Hit behind" {
+            GameManager.shared.playerStats.feedbackText = "Nice Serve! Let's analyze it: \n"
             
-        }else if pose == "Hit behind" {
             guard let leftWrist = joints[.leftWrist],
                   let rightWrist = joints[.rightWrist],
                   let leftShoulder = joints[.leftShoulder],
                   let rightShoulder = joints[.rightShoulder] else {
-                print("Required joints are not available.")
+                GameManager.shared.playerStats.feedbackText += "Required joints are not available.\n"
                 return
             }
             
@@ -101,25 +101,31 @@ class AICoach {
             // Calculate the angle of the arm to determine the direction of the hit
             if let armAngle = calculateAngle(from: joints, joint1: .rightShoulder, joint2: higherWristJoint, joint3: lowerWristJoint) {
                 if armAngle < 50.0 {
-                    print("You are hitting the ball too far right from your body.")
+                    GameManager.shared.playerStats.feedbackText += "You are hitting the ball too far right from your body.\n"
                 } else if armAngle > 100.0 {
-                    print("You are hitting the ball too much on your left.")
+                    GameManager.shared.playerStats.feedbackText += "You are hitting the ball too much on your left.\n"
                 }
             }
             
             // Check if the arm is properly stretched
             let elbowJoint: VNHumanBodyPoseObservation.JointName = isLeftWristHigher ? .leftElbow : .rightElbow
-
+            
             if let elbowAngle = calculateAngle(from: joints, joint1: .rightShoulder, joint2: elbowJoint, joint3: higherWristJoint) {
                 if elbowAngle > 30.0 {
-                    print("Keep your arm straight.")
+                    GameManager.shared.playerStats.feedbackText += "Keep your arm straight.\n"
                 }
             }
             
             // Compare shoulder heights to ensure proper posture
             if lowerShoulder.y <= higherShoulder.y {
-                print("Keep your lower shoulder lower than your higher shoulder for better form.")
+                GameManager.shared.playerStats.feedbackText += "Keep your lower shoulder lower than your higher shoulder for better form.\n"
+            }
+            
+            if GameManager.shared.playerStats.feedbackText.isEmpty  {
+                GameManager.shared.playerStats.feedbackText = "Congrats, your technique is perfect!"
             }
         }
+        
     }
 }
+

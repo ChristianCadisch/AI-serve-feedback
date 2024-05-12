@@ -39,13 +39,15 @@ class RootViewController: UIViewController {
         view.addSubview(overlayParentView)
         overlayParentView = UIView(frame: view.bounds)
         overlayParentView.translatesAutoresizingMaskIntoConstraints = false
+        let leftOffset: CGFloat = (view.bounds.width - view.bounds.width/1.3)/2
         view.addSubview(overlayParentView)
         NSLayoutConstraint.activate([
-            overlayParentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0), // 40 points from the left edge
+            overlayParentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: leftOffset), // 40 points from the left edge
             overlayParentView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            overlayParentView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            overlayParentView.topAnchor.constraint(equalTo: view.topAnchor, constant: -100),
             overlayParentView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         ])
+        
 
         
         
