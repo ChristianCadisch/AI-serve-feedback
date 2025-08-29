@@ -1,70 +1,105 @@
-# Building a feature-rich app for sports analysis
-Detect and classify human activity in real time using computer vision and machine learning.
+# 🎾 Tennis AI Coach
 
-## Overview
-The Action & Vision sample app leverages several capabilities available in Vision and Core ML in iOS 14 and later. The app provides an example of how you can use these technologies together to help players improve their bean-bag tossing performance.
+An **on-device computer vision app** that analyzes tennis serves in real time.  
+The app detects body keypoints and ball trajectories, measures serve speed, and generates **concise technique feedback** — all directly on your iPhone.  
+👉 [Watch the demo video here](https://youtu.be/GdJaosgI6JI?si=bANF1ydVb1aY-vH8).
 
-![A diagram of a human figure tossing a bean bag toward a board with a small opening. Above the figure is a running score tally, and below are elements that display the player's throw type, trajectory, speed, and score for each throw.][image-1]
+<p align="center">
+  <img src="trophy_pose.png" alt="AI Coach Serve Feedback" width="300"/>
+</p>
 
-- Note: This sample code project is associated with the WWDC20 session 10099: [Explore the Action & Vision App][1].
+---
 
-The app analyzes player performance in a game of bean bag toss. In this easy-to-learn game, you throw bean bags at a 4 x 2-foot board that has a 6-inch hole in one end. You stand 25 feet away from the center hole of the board, and score points if you toss the bean bag onto the board, and score additional points if it goes through the hole. To make gameplay more interesting, the app adds a style dimension to the scoring. It analyzes your throw and adds additional points based on your throw style, including overhand, underhand, or underleg. 
+## 🚀 Features
 
-![A diagram of the dimensions of the bean bag toss game. A human figure stands 25 feet from a 2 x 4-foot board. A dotted line indicates the movement of a bean bag tossed toward a 6-inch opening in the board.][image-2]
+- **Serve speed estimation**  
+  Tracks the tennis ball trajectory frame-by-frame and overlays velocity in real time.
 
-After each throw, the app also provides real-time feedback that indicates your throw’s type, speed, and trajectory, along with your score. 
+- **Technique feedback**  
+  Detects *trophy pose* and *contact point*, providing actionable, rule-based coaching tips.
 
-## Configure the project and prepare your environment
-You need to run the sample app on a physical device with an A12 processor or later, running iOS 14.
+- **On-device ML**  
+  Built with Apple's Vision framework (`VNHumanBodyPoseObservation`, `VNDetectTrajectoriesRequest`), ensuring low-latency analysis, offline usability, and privacy.
 
-Some Vision algorithms require a stable scene with a fixed camera position and stationary background. To analyze your own gameplay, mount your iOS device to a tripod and keep it fixed on the field of play. Alternatively, try the app by downloading and analyzing [a prerecorded video][2] of a bean bag toss player in action.
+- **Instant overlays**  
+  Frame-accurate SwiftUI/UIView rendering shows both ball path and body pose feedback directly on video.
 
-## Analyze the field of play
-Before gameplay can begin, the app analyzes the scene to find the location of the gameboard. It detects its location by using an instance of [VNCoreMLRequest][3] to run inference on a custom object-detection model created using [Create ML][4]. The app has a model trained using photos of gameboards, taken from various angles and distances, in both indoor and outdoor environments. To further improve the model’s accuracy, the training included images with people in the frame, and bean bags on and around the board. The app performs the request and retrieves its top observation to find the gameboard’s bounding rectangle.
+---
 
-Next, the app performs a [VNDetectContoursRequest][5] to detect the contours of the gameboard’s edges and uses them to determine the normalized pixel dimensions of the board, and the location of the hole. Because the app previously calculated the bounding rectangle of the detected board, it sets the bounding rectangle as the request’s region of interest, which helps the request significantly reduce noise and improve performance. Because the app knows the real-world size of the gameboard, it accurately determines the pixel dimensions of the field of play.
+## 🏃‍♂️ Run it locally (iOS 16+)
 
-To learn more about about contour detection, see the WWDC20 session 10673: [Explore Computer Vision APIs][6].
+### Prereqs
+- **Xcode 14.3+** (iOS 16 SDK or newer)
+- **iPhone or iPad on iOS 16+** (recommended; camera/Vision work best on device)
+- Apple Developer account for code signing (free is fine)
 
-## Determine scene stability
-Some Vision algorithms require a stable scene to produce accurate results. To determine scene stability, the app uses [VNTranslationalImageRegistrationRequest][7], a request that compares two images to calculate the x-axis and y-axis shift between them. The app analyzes video frames until the shift reaches a minimum difference threshold, at which point the app considers the scene stable.
+### 1) Get the code, open in Xcode and enable permissions
+- `git clone https://github.com/<your-user>/<your-repo>.git`
+- Open the project in Xcode
+- Select the **TennisAICoach** scheme (top-left)
 
-## Identify the player
-With the field of play established, the app is ready to start the game when a player enters the scene. To detect a player entering the frame, the app performs [VNDetectHumanBodyPoseRequest][8], a request available in iOS 14, that detects key body points of the face, torso, arms, and legs. The app performs this request on each video frame, and uses the data points it produces to draw a bounding box around the player. The app also uses the detected body points to determine the throw type.
+Add these keys if not present (Target → *Info*):
+- `Privacy - Camera Usage Description` → *Needed to analyze your serve in real time.*
+- `Privacy - Photo Library Usage Description` → *Needed to pick serve videos for analysis.*
+- (Optional) `Privacy - Photo Library Additions Usage Description` → *Needed to save annotated videos/screenshots.*
 
-For more information about using human body-pose detection, see [Detecting Human Body Poses in Images][9] and the WWDC20 session [10653: Detect Body and Hand Pose with Vision][10].
+### 2) Code signing, developer mode and running
+- Target → *Signing & Capabilities* → select your **Team**.
+- Change **Bundle Identifier** to something unique (e.g., `com.yourname.tennisaicoach`).
+  
+On iOS 16+: **Settings → Privacy & Security → Developer Mode → On** (device will reboot).
 
-## Detect the player’s throw trajectory
-The app uses Vision’s [VNDetectTrajectoriesRequest][11] to analyze the player’s throw. This request follows objects moving on a parabolic path. Detecting a parabola requires more than a single data point, so this is a _stateful_ request that builds evidence of the object’s movement over time. The app creates a single instance of the request and performs it multiple times over a sequence of video frames. After the request collects enough data points to recognize the trajectory, it calls its completion handler, and passes it the observations that contain the trajectory coordinates and timestamps. The app provides a data visualization by progressively drawing a line that traces the bag’s trajectory. When the request stops producing observations for more than 20 frames, the app considers the throw complete, and calculates the points that the player scored.
+- Plug in your device (or use Wi-Fi debugging).
+- In Xcode, choose your device as the run destination.
+- **Run** (⌘R).
 
-The app knows the pixel dimensions of the gameboard, and uses them as a reference to determine the distance of the player’s throw. Because the request also provides the detected trajectory’s duration, the app uses the time and distance to measure the throw’s speed.
+> 💡 Simulator note: Vision pose/trajectory and camera capture are limited in the simulator. Use a **real device** for live capture and the most accurate results. You can still test with picked videos via the gallery.
 
-To learn more about using `VNDetectTrajectoriesRequest`, see [Identifying Trajectories in Video][12].
+### 3) Use the app
+- **Record on-court** or **pick an existing serve video**.
+- The app overlays **pose + ball trajectory**, shows **serve speed**, and displays **technique tips** (trophy pose/contact).
 
-- Note: `VNDetectTrajectoriesRequest` detects multiple, concurrent trajectories, so an app needs to apply its own business logic to filter the trajectories to only those of interest. For example, the sample app knows the location of the gameboard, and it discards any trajectories that move in the opposite direction.
+### Troubleshooting
+- **“Failed to register bundle identifier”** → change the Bundle ID to a unique value.
+- **Provisioning/profile errors** → ensure a Team is selected under *Signing & Capabilities*.
+- **No camera/video feed** → check Camera/Photos permissions in *Settings → App Name*.
 
-## Determine the throw type
-To determine the throw type, the app uses another custom Core ML model, one trained using the Action Classification template available in Create ML. The app’s model training used video clips of people performing overhand, underhand, and underleg throws, and also included a negative training set with players performing actions other than throwing.
 
-As discussed previously, the app uses [VNDetectHumanBodyPoseRequest][13] to detect the player’s location. In each of the observations the request returns, the request also provides the normalized coordinates for various detected body points. The app retrieves these points from the request as a Core ML [MLMultiArray][14] and passes them as inputs to the Action Classifier. The model runs its predictions and returns the labeled results, which indicate the throw type, and a confidence value in the accuracy of the prediction.
+---
 
-To learn more about Action Classification, see [Creating an Action Classifier Model][15].
+## 🧠 Technical Implementation
 
-[1]:    https://developer.apple.com/videos/play/wwdc2020/10099/
-[2]:    https://developer.apple.com/sample-code/ml/sample.mov "A link to a pre-recorded video that you can use to try the sample app."
-[3]:    https://developer.apple.com/documentation/vision/vncoremlrequest "A link to the VNCoreMLRequest API reference."
-[4]:    https://developer.apple.com/documentation/createml "A link to the Create ML technology page."
-[5]:    https://developer.apple.com/documentation/vision/vndetectcontoursrequest "A link to the VNDetectContoursRequest API documentation."
-[6]:    https://developer.apple.com/videos/play/wwdc2020/10673 "A link to the WWDC20 session, Explore Computer Vision APIs."
-[7]:    https://developer.apple.com/documentation/vision/vntranslationalimageregistrationrequest "A link to the VNTranslationalImageRegistrationRequest API documentation."
-[8]:    https://developer.apple.com/documentation/vision/vndetecthumanbodyposerequest "A link to the VNDetectHumanBodyPoseRequest API documentation."
-[9]:    https://developer.apple.com/documentation/vision/detecting_human_body_poses_in_images "A link to the article, Detecting Human Body Poses in Images."
-[10]:    https://developer.apple.com/videos/play/wwdc2020/10653 "A link to the WWDC20 session, Detect Body and Hand Pose with Vision."
-[11]:    https://developer.apple.com/documentation/vision/vndetecttrajectoriesrequest "A link to the VNDetectTrajectoriesRequest API documentation."
-[12]:    https://developer.apple.com/documentation/vision/identifying_trajectories_in_video "A link to the article, Identifying Trajectories in Video."
-[13]:    https://developer.apple.com/documentation/vision/vndetecthumanbodyposerequest "A link to the VNDetectHumanBodyPoseRequest API documentation."
-[14]:    https://developer.apple.com/documentation/coreml/mlmultiarray "A link to the MLMultiArray API documentation."
-[15]:    https://developer.apple.com/documentation/createml/creating-an-action-classifier-model "A link to the article, Creating an Action Classifier Model."
+- **Pose Estimation**: Apple Vision’s `VNHumanBodyPoseObservation` with custom temporal smoothing to stabilize joints across frames and detect serve phases.  
+- **Trajectory Analysis**: Real-time ball tracking using `VNDetectTrajectoriesRequest` with polynomial/parabolic fits and confidence thresholds.  
+- **Speed Computation**: Velocity derived from timestamps, trajectory length, and extrapolated early path segments.  
+- **AI Coaching Logic**:  
+  - Implemented in [`AICoach.swift`](./AICoach.swift):contentReference[oaicite:2]{index=2}  
+  - Uses joint angle calculations, elbow/shoulder thresholds, wrist height derivatives.  
+  - Provides rule-based feedback (e.g., "bend knees more", "ensure arm is fully extended").  
+- **On-Device Pipeline**: Entire inference loop runs locally (AVFoundation + Vision), no server calls.
 
-[image-1]:    Documentation/gamescreen.png
-[image-2]:    Documentation/dimensions.png
+---
+
+## 📬 Contact
+
+If you run into issues, have questions, or want to contribute, feel free to reach out:
+
+- ✉️ Email: [christian.cadisch@gmail.com](mailto:christian.cadisch@gmail.com)  
+- 💼 LinkedIn: [linkedin.com/in/cadisch](https://www.linkedin.com/in/cadisch)  
+- 🐙 GitHub: [github.com/ChristianCadisch](https://github.com/ChristianCadisch)
+
+Always happy to connect and improve the project together!
+
+
+---
+
+## 🛠️ Roadmap
+
+- [ ] UI/UX refinements before App Store release   
+- [ ] Cloud sync of training sessions and progress tracking  
+
+---
+
+## 📜 License
+
+MIT License. See [LICENSE](./LICENSE) for details.
