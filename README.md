@@ -34,7 +34,7 @@ The app detects body keypoints and ball trajectories, measures serve speed, and 
 - Apple Developer account for code signing (free is fine)
 
 ### 1) Get the code, open in Xcode and enable permissions
-- `git clone https://github.com/<your-user>/<your-repo>.git`
+- `git clone https://github.com/ChristianCadisch/AI-serve-feedback.git`
 - Open the project in Xcode
 - Select the **TennisAICoach** scheme (top-left)
 
